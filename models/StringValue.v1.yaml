@@ -1,0 +1,16 @@
+title: StringValue
+type: object
+description: Base string field value
+properties:
+  id:
+    type: integer
+    default: 0
+    example: 123
+  value:
+    type: string
+    example: value
+    format: date
+    description: value of string field
+required:
+  - id
+  - value

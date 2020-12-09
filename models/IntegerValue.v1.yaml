@@ -1,0 +1,15 @@
+title: IntegerValue
+type: object
+properties:
+  id:
+    type: integer
+    default: 0
+    example: 934223
+  value:
+    type: integer
+    default: 0
+    example: 8
+required:
+  - id
+  - value
+description: Integer field value

@@ -1,0 +1,47 @@
+title: Field
+type: object
+x-tags:
+  - field
+description: Base entity field
+x-examples:
+  example-1:
+    id: 123
+    name: Name
+    attributes:
+      - null
+properties:
+  id:
+    type: integer
+    format: int64
+    default: 0
+    example: 123
+    description: ''
+  name:
+    type: string
+    example: Name
+    maxLength: 255
+    minLength: 3
+  attributes:
+    type: array
+    uniqueItems: false
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 80
+          example: readonly
+        value:
+          $ref: ./FieldValue.v1.yaml
+      required:
+        - id
+        - name
+        - value
+  type:
+    type: string
+required:
+  - id
+  - name
+  - type

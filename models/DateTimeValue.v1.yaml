@@ -1,0 +1,17 @@
+title: DateTimeValue
+type: object
+properties:
+  id:
+    type: integer
+    default: 0
+    example: 234873
+  value:
+    type: string
+    format: date-time
+    default: 'null'
+    example: '2020-12-09 23:34:12'
+    description: 'value of datetime format Y-m-d H:i:s'
+required:
+  - id
+  - value
+description: Datetime value
