@@ -1,0 +1,47 @@
+{
+    "name": "dg482/mrd",
+    "description": "Your Package Description here",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [],
+    "authors": [
+        {
+            "name": "dg482",
+            "email": "d.g.dev482@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable":true,
+    "require": {
+        "nesbot/carbon": "^2.16"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "^1.9@dev",
+        "mockery/mockery": "^1.0@dev",
+        "phpunit/phpunit": "^7.4@dev",
+        "squizlabs/php_codesniffer": "*",
+        "vimeo/psalm": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dg482\\Red\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dg482\\Red\\Tests\\":"tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs -p --standard=psr2 ./src",
+        "phpcst": "vendor/bin/phpcs -p --standard=psr2 ./tests",
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "extra": {
+    }
+}
