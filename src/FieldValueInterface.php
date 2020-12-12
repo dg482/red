@@ -9,15 +9,15 @@ namespace Dg482\Red;
 interface FieldValueInterface
 {
     /**
-     * @param  mixed|string|int|array|null $value
+     * @param  $value
      * @return FieldValueInterface
      */
-    public function setValue(string|int|array|null $value): FieldValueInterface;
+    public function setValue($value): FieldValueInterface;
 
     /**
-     * @return string|int|array
+     * @return string
      */
-    public function getValue(): string|int|array;
+    public function getValue(): string;
 
     /**
      * @param  int  $id

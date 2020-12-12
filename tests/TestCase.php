@@ -1,6 +1,6 @@
 <?php
 
-namespace Dg482\Mrd\Tests;
+namespace Dg482\Red\Tests;
 
 use PHPUnit\Framework\TestCase as TestCaseUnit;
 

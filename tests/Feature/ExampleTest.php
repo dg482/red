@@ -1,8 +1,8 @@
 <?php
 
-namespace Dg482\Mrd\Tests\Feature;
+namespace Dg482\Red\Tests\Feature;
 
-use Dg482\Mrd\Tests\TestCase;
+use Dg482\Red\Tests\TestCase;
 
 /**
  * Class ExampleTest
@@ -13,5 +13,10 @@ class ExampleTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+    }
+
+    public function testTrue()
+    {
+        $this->assertTrue(1 == '1');
     }
 }
