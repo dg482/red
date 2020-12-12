@@ -127,7 +127,7 @@ abstract class Field
      * @param  array  $attributes
      * @return $this
      */
-    protected function setAttributes(array $attributes): Field
+    public function setAttributes(array $attributes): Field
     {
         if (false === isset($attributes['showTable'])) {
             $attributes['showTable'] = true;

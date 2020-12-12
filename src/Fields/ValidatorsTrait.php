@@ -75,13 +75,11 @@ trait ValidatorsTrait
 
     /**
      * @param  array  $error_messages
-     * @return ValidatorsTrait
+     * @return void
      */
-    public function setErrorMessages(array $error_messages): ValidatorsTrait
+    public function setErrorMessages(array $error_messages): void
     {
         $this->error_messages = $error_messages;
-
-        return $this;
     }
 
     /**
@@ -94,13 +92,11 @@ trait ValidatorsTrait
 
     /**
      * @param  string|array  $trigger
-     * @return ValidatorsTrait
+     * @return void
      */
-    public function setTrigger(array $trigger): ValidatorsTrait
+    public function setTrigger(array $trigger): void
     {
         $this->trigger = $trigger;
-
-        return $this;
     }
 
     /**
@@ -110,14 +106,11 @@ trait ValidatorsTrait
      */
     protected function initRule(string $idx, string $name, array &$rule)
     {
-
-        $idx = $this->getRuleIdx($idx);
-
         $attribute = [
             'attribute' => '"'.$name.'"',
         ];
-
         $arguments = $this->getRuleArgument($idx);
+        $idx = $this->getRuleIdx($idx);
 
         switch ($idx) {
             case 'required':
