@@ -4,7 +4,7 @@ namespace Dg482\Red;
 
 /**
  * Interface Model
- * @package Dg482\Mrd
+ * @package Dg482\Red
  */
 interface Model
 {

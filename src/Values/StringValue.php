@@ -11,10 +11,10 @@ use Dg482\Red\FieldValueInterface;
 class StringValue extends FieldValue
 {
     /**
-     * @param  int|array|string|null  $value
+     * @param  $value
      * @return FieldValueInterface
      */
-    public function setValue(int|array|string|null $value): FieldValueInterface
+    public function setValue($value): FieldValueInterface
     {
         $this->value = (string)$value;
 
