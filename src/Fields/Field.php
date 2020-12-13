@@ -55,6 +55,7 @@ abstract class Field
             'disabled' => $this->isDisabled(),
             'attributes' => $this->getAttributes(),
             'validators' => $this->getValidators(),
+            'value' => (array)$this->getValue(),
         ];
     }
 
@@ -209,11 +210,12 @@ abstract class Field
 
     /**
      * @param  string  $name
-     * @return mixed|null
+     * @param  string  $default
+     * @return mixed
      */
-    protected function request(string $name)
+    protected function request(string $name, $default = '')
     {
-        return $_REQUEST[$name] ?? null;
+        return $_REQUEST[$name] ?? $default;
     }
 
     /**
@@ -221,6 +223,18 @@ abstract class Field
      */
     public function getValue()
     {
+        $value = $this->request($this->getField(), '');
+        if (!empty($value)) {
+            if (is_array($value) && isset($value['id'])) {
+                $this->value->setId((int) $value['id'])
+                    ->setValue((string) $value['value']);
+            } else {
+                if (is_string($value)) {
+                    $this->value->setValue((string) $value);
+                }
+            }
+        }
+
         return $this->value;
     }
 }
