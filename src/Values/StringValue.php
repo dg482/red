@@ -10,13 +10,19 @@ use Dg482\Red\FieldValueInterface;
  */
 class StringValue extends FieldValue
 {
+    public function __construct(int $id = 0, string $value = '')
+    {
+        $this->setId($id);
+        $this->setValue($value);
+    }
+
     /**
      * @param  $value
      * @return FieldValueInterface
      */
     public function setValue($value): FieldValueInterface
     {
-        $this->value = (string)$value;
+        $this->value = (string) $value;
 
         return $this;
     }

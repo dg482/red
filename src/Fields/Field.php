@@ -215,4 +215,12 @@ abstract class Field
     {
         return $_REQUEST[$name] ?? null;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 }
