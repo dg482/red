@@ -12,14 +12,22 @@ class StringField extends Field
 {
     protected const FIELD_TYPE = 'string';
 
+    /** @var StringValue */
+    protected $value;
+
+    public function __construct()
+    {
+        $value = new StringValue(0, '');
+        $this->value = &$value;
+    }
+
     /**
      * @param  string  $value
      * @return Field
      */
     public function setValue(string $value = ''): Field
     {
-        $value = new StringValue(0, $value);
-        $this->value = &$value;
+        $this->value->setValue($value);
 
         return $this;
     }

@@ -21,7 +21,7 @@ class FieldsTest extends TestCase
     public function testTextField()
     {
         /** @var StringField $field */
-        $field = $this->fieldTest(StringField::class);
+        $field = $this->fieldTest(StringField::class, 'email');
 
         $this->assertTrue('string' === $field->getFieldType());
 
@@ -39,32 +39,41 @@ class FieldsTest extends TestCase
 
         $this->assertTrue(4 === $field->getValue()->getId());
         $this->assertTrue('value test' === $field->getValue()->getValue());
+
+        $_REQUEST['email'] = '192837465@test.com';
+
+        $this->assertTrue($_REQUEST['email'] === (string) $field->getValue());
     }
 
-    protected function fieldTest($fieldClass)
+    /**
+     * @param $fieldClass
+     * @param $name
+     * @return mixed
+     */
+    protected function fieldTest($fieldClass, $name)
     {
         /** @var  $field */
         $field = (new $fieldClass)
+            ->setField($name)// 1 set field
             ->setAttributes([
                 'readonly' => false,
-            ])
-            ->hideForm()
-            ->hideTable()
-            ->setName('Test Field')
-            ->setField('email');
+            ]) // 2 set attributes
+            ->hideForm()// 2.1
+            ->hideTable()// 2.2
+            ->setName('Test Field');// 3 set field name (label)
 
 
         $this->assertTrue('Test Field' === $field->getName());
         $this->assertFalse($field->isDisabled());
         $this->assertFalse($field->isMultiple());
 
-        // set trigger to UI
+        // 4 set trigger to UI
         $field->setTrigger(['blur', 'change', 'click']);
 
 
         $this->assertTrue('blur|change|click' === $field->getTrigger());
 
-        // translator
+        // 5 set translator to validate message
         $field->setErrorMessages([
             'validation.required' => 'Test Field is required',
         ]);
@@ -75,7 +84,7 @@ class FieldsTest extends TestCase
             // return set message or trans helper framework
             return $messages[$key] ?? $key;
         });
-        // set validation
+        // 5.1 set validation rules
         $field->setRequired()
             ->addValidators('in:test@mail.com')
             ->addValidators('email')
@@ -84,6 +93,7 @@ class FieldsTest extends TestCase
 
         $this->assertCount(5, $field->getValidators());
 
+        // 6 set sample data
         $field->setData(['data' => 123]);
 
         $this->assertArrayHasKey('data', $field->getData());
@@ -95,7 +105,7 @@ class FieldsTest extends TestCase
         }, ['id', 'name', 'type', 'attributes', 'validators']);
 
 
-        $field->setValidators([]);
+        $field->setValidators([]);// clear validators
         $field->setTranslator(null);
         $this->assertCount(0, $field->getValidators());
 
