@@ -10,6 +10,11 @@ use Dg482\Red\FieldValueInterface;
  */
 class StringValue extends FieldValue
 {
+    /**
+     * StringValue constructor.
+     * @param  int  $id
+     * @param  string  $value
+     */
     public function __construct(int $id = 0, string $value = '')
     {
         $this->setId($id);

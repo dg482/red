@@ -2,6 +2,7 @@
 
 namespace Dg482\Red\Fields;
 
+use Dg482\Red\Values\FieldValues;
 use Dg482\Red\Values\StringValue;
 
 /**
@@ -12,12 +13,17 @@ class StringField extends Field
 {
     protected const FIELD_TYPE = 'string';
 
-    /** @var StringValue */
+    /** @var StringValue|FieldValues */
     protected $value;
 
-    public function __construct()
+    /**
+     * StringField constructor.
+     * @param  bool  $isMultiple
+     */
+    public function __construct(bool $isMultiple = false)
     {
-        $value = new StringValue(0, '');
+        $stringValue = new StringValue(0, '');
+        $value = ($isMultiple) ? (new FieldValues())->push($stringValue) : $stringValue;
         $this->value = &$value;
     }
 
@@ -33,9 +39,9 @@ class StringField extends Field
     }
 
     /**
-     * @return StringValue
+     * @return StringValue|FieldValues
      */
-    public function getValue(): StringValue
+    public function getValue()
     {
         return parent::getValue();
     }
