@@ -4,6 +4,7 @@ namespace Dg482\Red\Tests\Feature;
 
 use Dg482\Red\Fields\StringField;
 use Dg482\Red\Tests\TestCase;
+use Dg482\Red\Values\StringValue;
 
 /**
  * Class FieldsTest
@@ -16,9 +17,34 @@ class FieldsTest extends TestCase
         parent::setUp();
     }
 
+
     public function testTextField()
     {
-        $field = (new StringField)
+        /** @var StringField $field */
+        $field = $this->fieldTest(StringField::class);
+
+        $this->assertTrue('string' === $field->getFieldType());
+
+        $field->setValue('test value');
+
+        $this->assertInstanceOf(StringValue::class, $field->getValue());
+
+        $this->assertEmpty($field->getValue()->getId());
+        $this->assertTrue('test value' === $field->getValue()->getValue());
+
+        // updated value object
+        $field->getValue()
+            ->setId(4)
+            ->setValue('value test');
+
+        $this->assertTrue(4 === $field->getValue()->getId());
+        $this->assertTrue('value test' === $field->getValue()->getValue());
+    }
+
+    protected function fieldTest($fieldClass)
+    {
+        /** @var  $field */
+        $field = (new $fieldClass)
             ->setAttributes([
                 'readonly' => false,
             ])
@@ -46,7 +72,7 @@ class FieldsTest extends TestCase
         $field->setTranslator(function ($key) use ($field) {
             $messages = $field->getErrorMessages();
 
-            // renurn set message or trans helper framework
+            // return set message or trans helper framework
             return $messages[$key] ?? $key;
         });
         // set validation
@@ -77,6 +103,7 @@ class FieldsTest extends TestCase
             ->setDisabled(true);
 
         $this->assertTrue($field->isDisabled());
-        $this->assertTrue('string' === $field->getFieldType());
+
+        return $field;
     }
 }
