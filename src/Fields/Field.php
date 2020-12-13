@@ -3,6 +3,8 @@
 namespace Dg482\Red\Fields;
 
 use Dg482\Red\TranslateTrait;
+use Dg482\Red\Values\FieldValues;
+use Dg482\Red\Values\StringValue;
 
 /**
  * Class Field
@@ -35,6 +37,9 @@ abstract class Field
      */
     protected bool $disabled = false;
 
+    /** @var bool */
+    protected bool $multiple = false;
+
     /** @var mixed */
     protected $value;
 
@@ -55,7 +60,7 @@ abstract class Field
             'disabled' => $this->isDisabled(),
             'attributes' => $this->getAttributes(),
             'validators' => $this->getValidators(),
-            'value' => (array)$this->getValue(),
+            'value' => (array) $this->getValue(),
         ];
     }
 
@@ -165,7 +170,6 @@ abstract class Field
         return $this;
     }
 
-
     /**
      * @return array
      */
@@ -223,18 +227,46 @@ abstract class Field
      */
     public function getValue()
     {
-        $value = $this->request($this->getField(), '');
+        $value = $this->request($this->getField(), $this->isMultiple() ? [] : '');
         if (!empty($value)) {
-            if (is_array($value) && isset($value['id'])) {
-                $this->value->setId((int) $value['id'])
-                    ->setValue((string) $value['value']);
+            if ($this->isMultiple()) {
+                if (!$this->value instanceof FieldValues) {
+                    $this->value = new FieldValues();
+                }
+                array_map(function ($value) {
+                    $this->value->push(new StringValue((int)$value['id'], (string)$value['value']));
+                }, (array) $value);
             } else {
-                if (is_string($value)) {
-                    $this->value->setValue((string) $value);
+                if (is_array($value) && isset($value['id'])) {
+                    $this->value->setId((int) $value['id'])
+                        ->setValue((string) $value['value']);
+                } else {
+                    if (is_string($value)) {
+                        $this->value->setValue((string) $value);
+                    }
                 }
             }
         }
 
         return $this->value;
+    }
+
+    /**
+     * @param  bool  $multiple
+     * @return Field
+     */
+    public function setMultiple(bool $multiple): Field
+    {
+        $this->multiple = $multiple;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultiple(): bool
+    {
+        return $this->multiple;
     }
 }

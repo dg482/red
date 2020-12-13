@@ -2,8 +2,11 @@
 
 namespace Dg482\Red\Tests\Feature;
 
+use Dg482\Red\Exceptions\BadVariantKeyException;
+use Dg482\Red\Fields\SelectField;
 use Dg482\Red\Fields\StringField;
 use Dg482\Red\Tests\TestCase;
+use Dg482\Red\Values\FieldValues;
 use Dg482\Red\Values\StringValue;
 
 /**
@@ -17,11 +20,34 @@ class FieldsTest extends TestCase
         parent::setUp();
     }
 
+    public function testSelectField()
+    {
+        $_REQUEST['gender'] = 1;// Man
+
+        /** @var SelectField $field */
+        $field = $this->fieldTest(SelectField::class, 'gender');
+
+        $field->addVariants([
+            ['id' => 1, 'value' => 'Man'],
+            ['id' => 2, 'value' => 'Woman'],
+        ]);
+
+        $this->assertTrue('Man' === (string) $field->getValue());
+
+        $this->expectException(BadVariantKeyException::class);
+
+        $field->addVariants([
+            ['id' => null, 'value' => 'Bad variant'],
+        ]);
+    }
+
 
     public function testTextField()
     {
         /** @var StringField $field */
         $field = $this->fieldTest(StringField::class, 'email');
+
+        $this->assertFalse($field->isMultiple());
 
         $this->assertTrue('string' === $field->getFieldType());
 
@@ -45,6 +71,40 @@ class FieldsTest extends TestCase
         $this->assertTrue($_REQUEST['email'] === (string) $field->getValue());
     }
 
+    public function testTextFieldMultiple()
+    {
+        $_REQUEST['emails'] = [
+            ['id' => 123, 'value' => '192837465@test.com'],
+            ['id' => 321, 'value' => '564732891@com.test'],
+        ];
+
+        /** @var StringField $field */
+        $field = $this->fieldTest(StringField::class, 'emails');
+        $field->setMultiple(true);
+
+        $this->assertInstanceOf(FieldValues::class, $field->getValue());
+
+        $this->assertCount(2, $field->getValue()->getValues());
+
+        $valueObj = $field->getValue();
+        $valueObj->clear();
+        $this->assertCount(0, $valueObj->getValues());
+
+        $this->assertCount(2, $field->getValue()->getValues());
+
+        $valueObj = $field->getValue();
+
+        $valueObj->updateValues([
+            ['id' => 123, 'value' => '564732891@com.test'],
+            ['id' => 321, 'value' => '192837465@test.com'],
+        ]);
+        $value = $valueObj->getValueById(321);
+
+        $this->assertInstanceOf(StringValue::class, $value);
+
+        $this->assertTrue('192837465@test.com' === $value->getValue());
+    }
+
     /**
      * @param $fieldClass
      * @param $name
@@ -65,7 +125,6 @@ class FieldsTest extends TestCase
 
         $this->assertTrue('Test Field' === $field->getName());
         $this->assertFalse($field->isDisabled());
-        $this->assertFalse($field->isMultiple());
 
         // 4 set trigger to UI
         $field->setTrigger(['blur', 'change', 'click']);
