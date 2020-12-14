@@ -5,27 +5,13 @@
             "email": "d.g.dev482@gmail.com"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "Dg482\\Red\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Dg482\\Red\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "preferred-install": "dist",
-        "sort-packages": true
-    },
     "description": "Your Package Description here",
     "extra": {
     },
     "keywords": [],
     "license": "MIT",
     "minimum-stability": "dev",
-    "name": "dg482/mrd",
+    "name": "dg482/red",
     "prefer-stable": true,
     "require": {
         "nesbot/carbon": "^2.16",
@@ -43,6 +29,20 @@
         "phpcst": "vendor/bin/phpcs -p --standard=psr2 ./tests",
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dg482\\Red\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dg482\\Red\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
     },
     "type": "library"
 }
