@@ -1,0 +1,14 @@
+title: FieldValues
+type: object
+properties:
+  values:
+    description: The type of the value depends on the type of the field
+    type: array
+    items:
+      anyOf:
+        - $ref: ./StringValue.v1.yaml
+        - $ref: ./IntegerValue.v1.yaml
+        - $ref: ./DateTimeValue.v1.yaml
+required:
+  - values
+description: Multiple field values
