@@ -41,6 +41,41 @@ class FieldsTest extends TestCase
         ]);
     }
 
+    public function testSelectFieldException()
+    {
+        /** @var SelectField $field */
+        $field = $this->fieldTest(SelectField::class, 'gender');
+
+        $this->expectException(BadVariantKeyException::class);
+
+        $field->addVariants([
+            ['_id' => 1, '_value' => 'Man'],
+        ]);
+    }
+
+
+    public function testSelectFieldMultiple()
+    {
+        $_REQUEST['auto'] = [
+            ['id' => 1, 'value' => 'Audi'],
+            ['id' => 3, 'value' => 'MB'],// id variants
+        ];
+
+        /** @var SelectField $field */
+        $field = (new SelectField)
+            ->setField('auto')
+            ->setMultiple(true)
+            ->addVariants([
+                ['id' => 1, 'value' => 'Audi'],
+                ['id' => 2, 'value' => 'BMW'],
+                ['id' => 3, 'value' => 'MB'],
+            ]);
+
+        $this->assertInstanceOf(FieldValues::class, $field->getValue());
+
+        $this->assertCount(2, $field->getValue()->getValues());
+
+    }
 
     public function testTextField()
     {

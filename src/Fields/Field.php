@@ -2,6 +2,7 @@
 
 namespace Dg482\Red\Fields;
 
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\TranslateTrait;
 use Dg482\Red\Values\FieldValues;
 use Dg482\Red\Values\StringValue;
@@ -49,6 +50,7 @@ abstract class Field
     /**
      * Массив параметров поля для отрисовки в UI
      * @return array
+     * @throws EmptyFieldNameException
      */
     public function getFormField(): array
     {
@@ -93,9 +95,14 @@ abstract class Field
 
     /**
      * @return string
+     * @throws EmptyFieldNameException
      */
     public function getField(): string
     {
+        if (empty($this->field)) {
+            throw new EmptyFieldNameException();
+        }
+
         return $this->field;
     }
 
@@ -214,16 +221,17 @@ abstract class Field
 
     /**
      * @param  string  $name
-     * @param  string  $default
+     * @param  mixed  $default
      * @return mixed
      */
-    protected function request(string $name, $default = '')
+    protected function request(string $name, $default)
     {
         return $_REQUEST[$name] ?? $default;
     }
 
     /**
      * @return mixed
+     * @throws EmptyFieldNameException
      */
     public function getValue()
     {
