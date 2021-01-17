@@ -2,7 +2,7 @@ title: Field
 type: object
 x-tags:
   - field
-description: Base entity field
+description: Form field implementation
 x-examples:
   example-1:
     id: 123
@@ -15,33 +15,41 @@ properties:
     format: int64
     default: 0
     example: 123
-    description: ''
+    description: Field id
   name:
     type: string
-    example: Name
+    example: User Name
     maxLength: 255
     minLength: 3
-  attributes:
-    type: array
-    uniqueItems: false
-    items:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-          maxLength: 80
-          example: readonly
-        value:
-          $ref: ./FieldValue.v1.yaml
-      required:
-        - id
-        - name
-        - value
+    description: Form field label
+  field:
+    type: string
+    example: user_name
+    description: Form field name
+  disabled:
+    type: boolean
+    description: Form field is disabled
   type:
     type: string
+    description: Form field type
+    example: 'string, select etc'
+  attributes:
+    type: array
+    description: Form field attributes
+    uniqueItems: true
+    items: {}
+  value:
+    type: array
+    items:
+      anyOf:
+        - $ref: ./FieldValues.v1.yaml
+        - $ref: ./DateTimeValue.v1.yaml
+        - $ref: ./StringValue.v1.yaml
+        - $ref: ./IntegerValue.v1.yaml
 required:
   - id
   - name
+  - field
+  - disabled
   - type
+  - attributes

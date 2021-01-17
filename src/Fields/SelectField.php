@@ -3,6 +3,7 @@
 namespace Dg482\Red\Fields;
 
 use Dg482\Red\Exceptions\BadVariantKeyException;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Values\FieldValue;
 use Dg482\Red\Values\FieldValues;
 use Dg482\Red\Values\StringValue;
@@ -57,6 +58,7 @@ class SelectField extends StringField
 
     /**
      * @return StringValue|FieldValues
+     * @throws EmptyFieldNameException|BadVariantKeyException
      */
     public function getValue()
     {
@@ -64,21 +66,37 @@ class SelectField extends StringField
 
         if (!$this->isMultiple()) {
             return $this->getVariantById($value);
+        } else {
+            if (!$this->value instanceof FieldValues) {
+                $this->value = new FieldValues();
+            }
+            array_map(function (array $value) {
+                if (empty($value['id'])) {
+                    throw new BadVariantKeyException();
+                }
+                $this->value->push($this->getVariantById($value['id']));
+            }, $value);
         }
 
-        return new StringValue();
+        return $this->value;
     }
 
     /**
      * @param  int  $id
-     * @return mixed|null
+     * @return StringValue
      */
-    protected function getVariantById(int $id)
+    protected function getVariantById(int $id): StringValue
     {
         $result = array_filter($this->variants, function (FieldValue $val) use ($id) {
             return ($id === $val->getId());
         });
 
-        return (count($result)) ? current($result) : null;
+        $value = (new StringValue);
+
+        if (count($result)) {
+            $value = current($result);
+        }
+
+        return $value;
     }
 }
