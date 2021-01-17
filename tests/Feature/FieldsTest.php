@@ -74,7 +74,6 @@ class FieldsTest extends TestCase
         $this->assertInstanceOf(FieldValues::class, $field->getValue());
 
         $this->assertCount(2, $field->getValue()->getValues());
-
     }
 
     public function testTextField()
