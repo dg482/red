@@ -20,6 +20,10 @@ class FieldsTest extends TestCase
         parent::setUp();
     }
 
+    /**
+     * @throws BadVariantKeyException
+     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
+     */
     public function testSelectField()
     {
         $_REQUEST['gender'] = 1;// Man
@@ -41,6 +45,9 @@ class FieldsTest extends TestCase
         ]);
     }
 
+    /**
+     * @throws BadVariantKeyException
+     */
     public function testSelectFieldException()
     {
         /** @var SelectField $field */
@@ -53,7 +60,10 @@ class FieldsTest extends TestCase
         ]);
     }
 
-
+    /**
+     * @throws BadVariantKeyException
+     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
+     */
     public function testSelectFieldMultiple()
     {
         $_REQUEST['auto'] = [
