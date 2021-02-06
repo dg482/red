@@ -2,7 +2,7 @@
 
 namespace Dg482\Red\Values;
 
-use Dg482\Red\FieldValueInterface;
+use Dg482\Red\Interfaces\FieldValueInterface;
 
 /**
  * Class FieldValue
