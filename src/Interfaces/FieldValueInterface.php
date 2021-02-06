@@ -1,6 +1,6 @@
 <?php
 
-namespace Dg482\Red;
+namespace Dg482\Red\Interfaces;
 
 /**
  * Interface FieldValue

@@ -5,15 +5,18 @@ namespace Dg482\Red;
 /**
  * Interface Model
  * @package Dg482\Red
+ *
+ * @property int $id
  */
 interface Model
 {
     /**
      * Обертка над методом обновления в модели
-     * @param $request
+     * @param  array  $attributes
+     * @param  array  $options
      * @return bool
      */
-    public function update(array $request): bool;
+    public function update(array $attributes, array $options = []);
 
     /**
      * Получить поля авто заполнения
@@ -23,8 +26,14 @@ interface Model
 
     /**
      * Обертка над методом создания модели
-     * @param array $request
+     * @param  array  $request
      * @return Model
      */
     public function create(array $request): Model;
+
+    /**
+     * Массив полей автозаполнения
+     * @return array
+     */
+    public function getFillable();
 }

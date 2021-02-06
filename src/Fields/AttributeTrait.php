@@ -12,7 +12,6 @@ trait AttributeTrait
     /** @var array $attributes */
     protected array $attributes = [];
 
-
     /**
      * @return array
      */
