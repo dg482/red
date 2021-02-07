@@ -2,12 +2,12 @@
 
 namespace Dg482\Red\Tests\Feature;
 
+use Dg482\Red\Builders\Form\Fields\SelectField;
+use Dg482\Red\Builders\Form\Fields\StringField;
+use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
+use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 use Dg482\Red\Exceptions\BadVariantKeyException;
-use Dg482\Red\Fields\SelectField;
-use Dg482\Red\Fields\StringField;
 use Dg482\Red\Tests\TestCase;
-use Dg482\Red\Values\FieldValues;
-use Dg482\Red\Values\StringValue;
 
 /**
  * Class FieldsTest

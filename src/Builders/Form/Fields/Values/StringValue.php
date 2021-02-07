@@ -1,8 +1,6 @@
 <?php
 
-namespace Dg482\Red\Values;
-
-use Dg482\Red\Interfaces\FieldValueInterface;
+namespace Dg482\Red\Builders\Form\Fields\Values;
 
 /**
  * Class StringValue
@@ -23,9 +21,9 @@ class StringValue extends FieldValue
 
     /**
      * @param  $value
-     * @return FieldValueInterface
+     * @return StringValue
      */
-    public function setValue($value): FieldValueInterface
+    public function setValue($value): StringValue
     {
         $this->value = (string) $value;
 

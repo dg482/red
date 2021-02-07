@@ -1,9 +1,9 @@
 <?php
 
-namespace Dg482\Red\Fields;
+namespace Dg482\Red\Builders\Form\Fields;
 
-use Dg482\Red\Values\FieldValues;
-use Dg482\Red\Values\StringValue;
+use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
+use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 
 /**
  * Class Text
@@ -40,6 +40,7 @@ class StringField extends Field
 
     /**
      * @return StringValue|FieldValues
+     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
      */
     public function getValue()
     {

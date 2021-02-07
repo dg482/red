@@ -1,6 +1,6 @@
 <?php
 
-namespace Dg482\Red\Fields;
+namespace Dg482\Red\Builders\Form;
 
 /**
  * Trait AttributeTrait
