@@ -1,12 +1,12 @@
 <?php
 
-namespace Dg482\Red\Fields;
+namespace Dg482\Red\Builders\Form\Fields;
 
+use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
+use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
+use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 use Dg482\Red\Exceptions\BadVariantKeyException;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
-use Dg482\Red\Values\FieldValue;
-use Dg482\Red\Values\FieldValues;
-use Dg482\Red\Values\StringValue;
 
 /**
  * Class SelectField

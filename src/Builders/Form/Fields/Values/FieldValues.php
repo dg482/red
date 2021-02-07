@@ -1,6 +1,6 @@
 <?php
 
-namespace Dg482\Red\Values;
+namespace Dg482\Red\Builders\Form\Fields\Values;
 
 /**
  * Class FieldValues

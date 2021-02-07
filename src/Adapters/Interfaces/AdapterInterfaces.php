@@ -3,6 +3,7 @@
 namespace Dg482\Red\Adapters\Interfaces;
 
 use Closure;
+use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Model;
 
 /**
@@ -12,42 +13,73 @@ use Dg482\Red\Model;
 interface AdapterInterfaces
 {
     /**
+     * Определение модели в контексте адаптера
+     *
      * @param $model
      * @return $this
      */
     public function setModel($model): self;
 
     /**
+     * Чтение данных из БД
+     *
      * @param  int  $limit
      * @return array
      */
     public function read($limit = 1): array;
 
     /**
+     * Запись данных в БД
+     *
      * @return bool
      */
     public function write(): bool;
 
     /**
+     * Удаление данных из БД
+     *
      * @return bool
      */
     public function delete(): bool;
 
     /**
+     * Обновение данных в БД
+     *
      * @return bool
      */
     public function update(): bool;
 
     /**
+     * Исолнение текущего запроса к БД
+     *
      * @return bool
      */
     public function execute(): bool;
 
     /**
+     * Возвращает описательный массив колонок таблицы модели в БД
+     * [
+     *   [
+     *      "id" => "email",
+     *      "table" => "users",
+     *      "type" => "string"
+     *  ],
+     *  ....
+     * ]
+     *
      * @param  Model  $model
+     * @param  array  $ignoreColumns
      * @return array
      */
-    public function getTableFields(Model $model): array;
+    public function getTableColumns(Model $model, array $ignoreColumns = []): array;
+
+    /**
+     * Возвращает реализацию Field для отображения поля в UI
+     *
+     * @param  array  $columnMeta
+     * @return Field
+     */
+    public function getTableField(array $columnMeta): Field;
 
     /**
      * @param  Closure|null  $filter

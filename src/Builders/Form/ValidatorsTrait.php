@@ -1,6 +1,8 @@
 <?php
 
-namespace Dg482\Red\Fields;
+namespace Dg482\Red\Builders\Form;
+
+use Dg482\Red\Builders\Form\Fields\Field;
 
 /**
  * Trait ValidatorsTrait
@@ -22,7 +24,6 @@ trait ValidatorsTrait
 
     /** @var bool */
     protected bool $required = false;
-
 
     /**
      * @return $this|Field
