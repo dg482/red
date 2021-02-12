@@ -198,28 +198,6 @@ abstract class Field
         return $this;
     }
 
-    /**
-     * @param  string  $rule
-     * @param  string|null  $message
-     * @param  string|null  $idx
-     * @return $this
-     */
-    public function addValidators(string $rule, ?string $message = '', ?string $idx = ''): Field
-    {
-        $resultRule = [
-            'idx' => $idx,
-            'rule' => $rule,
-            'trigger' => $this->trigger,
-            'message' => $message ?? '',
-            'type' => ($this->isMultiple()) ? 'array' : $this->getFieldType(),
-        ];
-
-        $this->initRule($rule, $this->getName(), $resultRule);
-
-        array_push($this->validators, $resultRule);
-
-        return $this;
-    }
 
     /**
      * @param  string  $name
