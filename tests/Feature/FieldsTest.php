@@ -2,6 +2,7 @@
 
 namespace Dg482\Red\Tests\Feature;
 
+use Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
@@ -218,5 +219,14 @@ class FieldsTest extends TestCase
         $this->assertTrue($field->isDisabled());
 
         return $field;
+    }
+
+
+    public function testFieldsTypesExists()
+    {
+        array_map(function (string $type) {
+            $targetClass = 'Dg482\\Red\\Builders\\Form\\Fields\\'.ucfirst($type).'Field';
+            $this->assertTrue(class_exists($targetClass));
+        }, Form::getSupportFieldsType());
     }
 }

@@ -14,7 +14,7 @@ use Dg482\Red\Exceptions\EmptyFieldNameException;
  */
 class SelectField extends StringField
 {
-    const FIELD_TYPE = 'select';
+    protected const FIELD_TYPE = 'select';
 
     /** @var array[FieldValue] */
     protected array $variants = [];

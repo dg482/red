@@ -3,6 +3,7 @@
 namespace Dg482\Red\Adapters;
 
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
+use Dg482\Red\Builders\Form;
 use Dg482\Red\Commands\Crud\Command;
 use Dg482\Red\Commands\Crud\Read;
 use Dg482\Red\Commands\Interfaces\CommandInterfaces;
@@ -15,6 +16,26 @@ abstract class Adapter implements AdapterInterfaces
 {
     /** @var CommandInterfaces|Command */
     private $command;
+
+    /** @var array */
+    protected array $typeFields = [];
+
+    /**
+     * @return array
+     */
+    public function getTypeFields(): array
+    {
+        $result = [];
+
+        array_map(function (string $type) use (&$result) {
+            $targetClass = 'Dg482\\Red\\Builders\\Form\\Fields\\'.ucfirst($type).'Field';
+            if (class_exists($targetClass)) {
+                $result[$type] = $targetClass;
+            }
+        }, Form::getSupportFieldsType());
+
+        return $result;
+    }
 
     /**
      * @param  int  $limit
