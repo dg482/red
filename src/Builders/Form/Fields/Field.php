@@ -279,4 +279,12 @@ abstract class Field
     {
         return $this->multiple;
     }
+
+    /**
+     * @return string
+     */
+    public static function getType(): string
+    {
+        return static::FIELD_TYPE;
+    }
 }

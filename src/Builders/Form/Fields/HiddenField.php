@@ -6,7 +6,7 @@ namespace Dg482\Red\Builders\Form\Fields;
  * Class Hidden
  * @package Dg482\Red\Builders\Form\Fields
  */
-class Hidden extends Field
+class HiddenField extends Field
 {
     use FieldTrait;
 

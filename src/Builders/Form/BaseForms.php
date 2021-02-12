@@ -74,6 +74,9 @@ class BaseForms
         return $this;
     }
 
+    /**
+     * @return Model
+     */
     public function getModel(): Model
     {
         return $this->model;

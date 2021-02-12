@@ -46,9 +46,4 @@ class BaseAdapter extends Adapter
     {
         return new StringField();
     }
-
-//    public function getTableFields(Model $model): array
-//    {
-//        return [];
-//    }
 }

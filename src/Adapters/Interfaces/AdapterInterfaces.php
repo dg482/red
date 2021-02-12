@@ -13,6 +13,11 @@ use Dg482\Red\Model;
 interface AdapterInterfaces
 {
     /**
+     * @return array
+     */
+    public function getTypeFields(): array;
+
+    /**
      * Определение модели в контексте адаптера
      *
      * @param $model
