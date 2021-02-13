@@ -7,6 +7,7 @@ use Dg482\Red\Builders\Form;
 use Dg482\Red\Commands\Crud\Command;
 use Dg482\Red\Commands\Crud\Read;
 use Dg482\Red\Commands\Interfaces\CommandInterfaces;
+use Dg482\Red\Model;
 
 /**
  * Class Adapter
@@ -19,6 +20,9 @@ abstract class Adapter implements AdapterInterfaces
 
     /** @var array */
     protected array $typeFields = [];
+
+    /** @var array */
+    protected array $tableColumns = [];
 
     /**
      * @return array
@@ -101,5 +105,26 @@ abstract class Adapter implements AdapterInterfaces
     public function update(): bool
     {
         return false;
+    }
+
+    /**
+     * @param  Model  $model
+     * @param  array  $ignoreColumns
+     * @return array
+     */
+    public function getTableColumns(Model $model, array $ignoreColumns = []): array
+    {
+        return $this->tableColumns;
+    }
+
+    /**
+     * @param  array  $tableColumns
+     * @return Adapter
+     */
+    public function setTableColumns(array $tableColumns): Adapter
+    {
+        $this->tableColumns = $tableColumns;
+
+        return $this;
     }
 }

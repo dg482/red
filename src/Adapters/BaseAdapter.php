@@ -5,6 +5,8 @@ namespace Dg482\Red\Adapters;
 use Closure;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form\Fields\Field;
+use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Model;
 
@@ -28,7 +30,7 @@ class BaseAdapter extends Adapter
      */
     public function getTableColumns(Model $model, array $ignoreColumns = []): array
     {
-        return [];
+        return $this->tableColumns;
     }
 
     /**
@@ -44,6 +46,21 @@ class BaseAdapter extends Adapter
      */
     public function getTableField(array $columnMeta): Field
     {
-        return new StringField();
+        switch ($columnMeta['type']) {
+            case StringField::getType():
+            default:
+                $field = new StringField();
+                break;
+            case HiddenField::getType():
+                $field = new HiddenField();
+                break;
+            case SelectField::getType():
+                $field = new SelectField();
+                break;
+        }
+
+        $field->setField($columnMeta['id']);
+
+        return $field;
     }
 }
