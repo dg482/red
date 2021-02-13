@@ -8,6 +8,7 @@ use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Fields\Field;
+use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
 use Dg482\Red\Builders\Form\Structure\Fieldset;
 use Dg482\Red\Commands\Crud\Read;
@@ -430,50 +431,56 @@ class Resource
      */
     public function fields(): array
     {
-//        $validators = $this->formModel->getValidators();
-//        $error_message = $this->formModel->getErrorMessages();
+        $validators = $this->formModel->getValidators();
+        $error_message = $this->formModel->getErrorMessages();
 
-        $fields = array_filter(
-            $this->adapter->getTableColumns($this->model, $this->hidden_fields), // 1.1 get table database columns
-            function (array $columnMeta) {
-                $id = $columnMeta['id'] ?? null;
-                $field = $this->adapter->getTableField($columnMeta); // 1.2 get form field by column database type
-                if (isset($this->labels[$id])) {
-                    $field->setName($this->labels[$id]);
-                }
+        $fields = $this->adapter->getTableColumns($this->model, $this->hidden_fields);
+
+        // 1.3 build Fields list
+        $fields = array_map(function (array $columnMeta) {
+            $id = $columnMeta['id'] ?? null;
+
+            if (in_array($id, $this->hidden_fields)) {
+                $columnMeta['type'] = HiddenField::getType();
             }
-        );
 
-        return array_map(function (Field $field) /*use ($validators, $error_message) */ {
+            $field = $this->adapter->getTableField($columnMeta);
+            $field->setField($id);
 
-            $method = 'field'.ucfirst($field->getField());
+            if (isset($this->labels[$id])) {
+                $field->setName($this->labels[$id]);
+            }
+
+            return $field;
+        }, $fields);
+
+        return array_map(function (Field $field) use ($validators, $error_message) {
+
+            $method = 'formField'.ucfirst($field->getField());
             $key = $field->getField();
 
             if (method_exists($this->formModel, $method)) {
-                /** @var Field $newField */
-                $newField = $this->formModel->{$method}($field);
-
-                $newField->setField($key);
-                $newField->setName($field->getName());
-                $newField->setAttributes($field->getAttributes());
-                $field = $newField;
+                /** @var Field $field */
+                $field = $this->formModel->{$method}($field);
+                $field->setField($key);
+                $field->setName($field->getName());
+                //$newField->setAttributes($field->getAttributes());
             }
 
             if ($this->getRelation()) {
                 $field->setField($this->getRelation().'|'.$key);  //set relation name
             }
 
-//            if (isset($validators[$key])) {
-//                array_map(function (string $rule) use (&$field, $error_message, $key) {
-//                    $idx = Arr::first(explode(':', $rule));
-//                    if (isset($error_message[$key][$idx])) {
-//                        $field->addValidators($rule, $error_message[$key][$idx], $idx);
-//                    } else {
-//                        $field->addValidators($rule, null, $idx);
-//                    }
-//
-//                }, $validators[$key]);
-//            }
+            if (isset($validators[$key])) {
+                array_map(function (string $rule) use (&$field, $error_message, $key) {
+                    $idx = current(explode(':', $rule));
+                    if (isset($error_message[$key][$idx])) {
+                        $field->addValidators($rule, $error_message[$key][$idx], $idx);
+                    } else {
+                        $field->addValidators($rule, null, $idx);
+                    }
+                }, $validators[$key]);
+            }
 
             return $field;
         }, $fields);
