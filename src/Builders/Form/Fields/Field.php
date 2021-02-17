@@ -222,7 +222,7 @@ abstract class Field
                     $this->value = new FieldValues();
                 }
                 array_map(function ($value) {
-                    $this->value->push(new StringValue((int)$value['id'], (string)$value['value']));
+                    $this->value->push(new StringValue((int) $value['id'], (string) $value['value']));
                 }, (array) $value);
             } else {
                 if (is_array($value) && isset($value['id'])) {
@@ -264,5 +264,13 @@ abstract class Field
     public static function getType(): string
     {
         return static::FIELD_TYPE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowForm(): bool
+    {
+        return (bool) $this->attributes['showForm'] ?? false;
     }
 }

@@ -323,5 +323,12 @@ class FieldsTest extends TestCase
                     break;
             }
         }
+
+        $jsonForm = $resource->getForm();
+//        var_dump($jsonForm);
+
+        $this->assertTrue($jsonForm['form'] === 'ui');
+
+        $this->assertCount(6, $jsonForm['items']);
     }
 }
