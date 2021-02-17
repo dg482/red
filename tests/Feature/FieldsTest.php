@@ -6,6 +6,7 @@ use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\IntegerField;
 use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
@@ -243,6 +244,8 @@ class FieldsTest extends TestCase
             ['id' => 'email', 'type' => 'string', 'table' => 'test'],
             ['id' => 'name', 'type' => 'string', 'table' => 'test'],
             ['id' => 'password', 'type' => 'string', 'table' => 'test'],
+            ['id' => 'age', 'type' => 'smallint', 'table' => 'test'],
+            ['id' => 'balance', 'type' => 'float', 'table' => 'test'],
         ]);
 //        $adapter->method('getTableColumns')->willReturn([
 //            ['id' => 'email', 'type' => 'string', 'table' => 'test'],
@@ -311,6 +314,10 @@ class FieldsTest extends TestCase
                 case 'password':
                     $this->assertInstanceOf(StringField::class, $field);
                     $this->assertCount(2, $validators);
+                    break;
+                case 'age':
+//                case 'balance':
+                    $this->assertInstanceOf(IntegerField::class, $field);
                     break;
                 default:
                     break;

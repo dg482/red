@@ -46,17 +46,12 @@ class BaseAdapter extends Adapter
      */
     public function getTableField(array $columnMeta): Field
     {
-        switch ($columnMeta['type']) {
-            case StringField::getType():
-            default:
-                $field = new StringField();
-                break;
-            case HiddenField::getType():
-                $field = new HiddenField();
-                break;
-            case SelectField::getType():
-                $field = new SelectField();
-                break;
+        $targetClass = 'Dg482\\Red\\Builders\\Form\\Fields\\'.ucfirst($columnMeta['type']).'Field';
+
+        if (class_exists($targetClass)) {
+            $field = (new $targetClass);
+        } else {
+            $field = new StringField();
         }
 
         $field->setField($columnMeta['id']);

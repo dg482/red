@@ -3,11 +3,11 @@
 namespace Dg482\Red\Builders\Form\Fields;
 
 /**
- * Class Hidden
+ * Class BigintField
  * @package Dg482\Red\Builders\Form\Fields
  */
-class HiddenField extends StringField
+class BigintField extends IntegerField
 {
     /** @var string */
-    protected const FIELD_TYPE = 'hidden';
+    protected const FIELD_TYPE = 'bigint';
 }

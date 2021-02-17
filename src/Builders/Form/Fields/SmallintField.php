@@ -3,11 +3,11 @@
 namespace Dg482\Red\Builders\Form\Fields;
 
 /**
- * Class Hidden
+ * Class SmallintField
  * @package Dg482\Red\Builders\Form\Fields
  */
-class HiddenField extends StringField
+class SmallintField extends IntegerField
 {
     /** @var string */
-    protected const FIELD_TYPE = 'hidden';
+    protected const FIELD_TYPE = 'smallint';
 }

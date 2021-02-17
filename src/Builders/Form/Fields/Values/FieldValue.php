@@ -10,8 +10,8 @@ use Dg482\Red\Interfaces\FieldValueInterface;
  */
 abstract class FieldValue implements FieldValueInterface
 {
-    /** @var string */
-    protected string $value = '';
+    /** @var int|string */
+    protected $value;
 
     /** @var int */
     protected int $id = 0;
@@ -32,7 +32,7 @@ abstract class FieldValue implements FieldValueInterface
      */
     public function getValue(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 
     /**
@@ -59,6 +59,6 @@ abstract class FieldValue implements FieldValueInterface
      */
     public function __toString(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 }
