@@ -164,22 +164,6 @@ class Resource
 
 
     /**
-     * Поля формы ресурса
-     * @return array|array[]
-     * @throws EmptyFieldNameException
-     */
-    public function formFields(): array
-    {
-        $fields = [Fieldset::make('Empty fieldset', '')];
-
-        if (method_exists($this->model, 'resourceFields')) {
-            $fields = $this->model->resourceFields();
-        }
-
-        return $this->filterFields('isShowForm', $fields);
-    }
-
-    /**
      * Фильтр полей
      * @param  string  $method
      * @param  array  $fields
@@ -192,12 +176,14 @@ class Resource
 
         return array_map(function (Field $field) use ($original) {
 
-            if (false === empty($field->getField())) {
-                // set model field value
-                $this->values[$field->getField()] = $field->getFieldValue($original);
+            if (!$field instanceof BaseStructure) {
+                if (false === empty($field->getField())) {
+                    // set model field value
+                    $this->values[$field->getField()] = $field->getFieldValue($original);
 
-                if ([] !== $field->getValidators()) {
-                    $this->validators[$field->getField()] = $field->getValidators();
+                    if ([] !== $field->getValidators()) {
+                        $this->validators[$field->getField()] = $field->getValidators();
+                    }
                 }
             }
 
@@ -500,5 +486,22 @@ class Resource
         $this->getAdapter()->setModel($this->getModel());// 1.3 set adapter model
 
         return $this;
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getForm(): array
+    {
+        return [
+            'title' => $this->formModel->getFormTitle(),
+            'form' => $this->formModel->getFormName(),
+            'items' => $this->fields(),
+            'actions' => $this->formModel->getActions(),
+            'values' => $this->getValues(),
+            'validator' => $this->formModel->getValidators(),
+            'context' => $this->getContext(),
+        ];
     }
 }
