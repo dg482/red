@@ -3,13 +3,13 @@
 namespace Dg482\Red\Builders\Form\Fields;
 
 /**
- * Class SmallintField
+ * Class FloatField
  * @package Dg482\Red\Builders\Form\Fields
  */
-class SmallintField extends IntegerField
+class FloatField extends IntegerField
 {
     /** @var string */
-    protected const FIELD_TYPE = 'smallint';
+    protected const FIELD_TYPE = 'float';
 
     /**
      * IntegerField constructor.

@@ -10,13 +10,13 @@ use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
-use Dg482\Red\Builders\Form\Structure\Fieldset;
 use Dg482\Red\Commands\Crud\Read;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\Create as ActionCreate;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
 use Dg482\Red\Resource\Actions\Update as ActionUpdate;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
+use Exception;
 
 /**
  * Ресурс модели
@@ -490,7 +490,7 @@ class Resource
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getForm(): array
     {

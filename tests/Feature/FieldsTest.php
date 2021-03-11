@@ -11,10 +11,13 @@ use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
+use Dg482\Red\Builders\Form\Structure\Fieldset;
 use Dg482\Red\Exceptions\BadVariantKeyException;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
+use Exception;
 
 /**
  * Class FieldsTest
@@ -29,9 +32,9 @@ class FieldsTest extends TestCase
 
     /**
      * @throws BadVariantKeyException
-     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
+     * @throws EmptyFieldNameException
      */
-    public function testSelectField()
+    public function testSelectField(): void
     {
         $_REQUEST['gender'] = 1;// Man
 
@@ -69,7 +72,7 @@ class FieldsTest extends TestCase
 
     /**
      * @throws BadVariantKeyException
-     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
+     * @throws EmptyFieldNameException
      */
     public function testSelectFieldMultiple()
     {
@@ -95,33 +98,40 @@ class FieldsTest extends TestCase
 
     public function testTextField()
     {
-        /** @var StringField $field */
-        $field = $this->fieldTest(StringField::class, 'email');
+        try {
+            /** @var StringField $field */
+            $field = $this->fieldTest(StringField::class, 'email');
 
-        $this->assertFalse($field->isMultiple());
+            $this->assertFalse($field->isMultiple());
 
-        $this->assertTrue('string' === $field->getFieldType());
+            $this->assertTrue('string' === $field->getFieldType());
 
-        $field->setValue('test value');
+            $field->setValue('test value');
 
-        $this->assertInstanceOf(StringValue::class, $field->getValue());
+            $this->assertInstanceOf(StringValue::class, $field->getValue());
 
-        $this->assertEmpty($field->getValue()->getId());
-        $this->assertTrue('test value' === $field->getValue()->getValue());
+            $this->assertEmpty($field->getValue()->getId());
+            $this->assertTrue('test value' === $field->getValue()->getValue());
 
-        // updated value object
-        $field->getValue()
-            ->setId(4)
-            ->setValue('value test');
+            // updated value object
+            $field->getValue()
+                ->setId(4)
+                ->setValue('value test');
 
-        $this->assertTrue(4 === $field->getValue()->getId());
-        $this->assertTrue('value test' === $field->getValue()->getValue());
 
-        $_REQUEST['email'] = '192837465@test.com';
+            $this->assertTrue(4 === $field->getValue()->getId());
+            $this->assertTrue('value test' === $field->getValue()->getValue());
 
-        $this->assertTrue($_REQUEST['email'] === (string) $field->getValue());
+            $_REQUEST['email'] = '192837465@test.com';
+
+            $this->assertTrue($_REQUEST['email'] === (string) $field->getValue());
+        } catch (EmptyFieldNameException $e) {
+        }
     }
 
+    /**
+     * @throws EmptyFieldNameException
+     */
     public function testTextFieldMultiple()
     {
         $_REQUEST['emails'] = [
@@ -227,7 +237,9 @@ class FieldsTest extends TestCase
         return $field;
     }
 
-
+    /**
+     *
+     */
     public function testFieldsTypesExists()
     {
         array_map(function (string $type) {
@@ -236,6 +248,10 @@ class FieldsTest extends TestCase
         }, Form::getSupportFieldsType());
     }
 
+    /**
+     * @throws EmptyFieldNameException
+     * @throws Exception
+     */
     public function testFormFields()
     {
         $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
@@ -254,6 +270,7 @@ class FieldsTest extends TestCase
 
         $model = $this->createMock(Model::class);
 
+        /** @var  BaseForms::class $baseForm */
         $baseForm = $this->getMockBuilder(BaseForms::class)
             ->setMethods(['formFieldEmail'])
             ->getMock();
@@ -304,7 +321,7 @@ class FieldsTest extends TestCase
                 case 'email':
                     array_map(function ($validator) {
                         if ($validator['rule'] === 'email') {
-                            $this->assertEquals($validator['message'], 'Поле Email заполненно не корректно!');
+                            $this->assertEquals('Поле Email заполненно не корректно!', $validator['message']);
                         }
                     }, $validators);
                     $this->assertInstanceOf(StringField::class, $field);
@@ -316,7 +333,7 @@ class FieldsTest extends TestCase
                     $this->assertCount(2, $validators);
                     break;
                 case 'age':
-//                case 'balance':
+                case 'balance':
                     $this->assertInstanceOf(IntegerField::class, $field);
                     break;
                 default:
@@ -330,5 +347,13 @@ class FieldsTest extends TestCase
         $this->assertTrue($jsonForm['form'] === 'ui');
 
         $this->assertCount(6, $jsonForm['items']);
+    }
+
+
+    public function testFieldset()
+    {
+        $fieldset = Fieldset::make('Test', __CLASS__, []);
+
+        $this->assertInstanceOf(Fieldset::class, $fieldset);
     }
 }
