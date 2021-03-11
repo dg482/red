@@ -5,8 +5,6 @@ namespace Dg482\Red\Adapters;
 use Closure;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form\Fields\Field;
-use Dg482\Red\Builders\Form\Fields\HiddenField;
-use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Model;
 
@@ -51,6 +49,7 @@ class BaseAdapter extends Adapter
         if (class_exists($targetClass)) {
             $field = (new $targetClass);
         } else {
+            var_dump($targetClass);
             $field = new StringField();
         }
 
