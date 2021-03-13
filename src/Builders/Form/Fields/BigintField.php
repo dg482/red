@@ -10,4 +10,13 @@ class BigintField extends IntegerField
 {
     /** @var string */
     protected const FIELD_TYPE = 'bigint';
+
+    /**
+     * BigintField constructor.
+     * @param  bool  $isMultiple
+     */
+    public function __construct(bool $isMultiple = false)
+    {
+        parent::__construct($isMultiple);
+    }
 }

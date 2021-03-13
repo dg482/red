@@ -13,6 +13,8 @@ use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 use Dg482\Red\Builders\Form\Structure\Fieldset;
+use Dg482\Red\Builders\Form\Structure\TabPane;
+use Dg482\Red\Builders\Form\Structure\Tabs;
 use Dg482\Red\Exceptions\BadVariantKeyException;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
@@ -263,6 +265,7 @@ class FieldsTest extends TestCase
             ['id' => 'password', 'type' => 'string', 'table' => 'test'],
             ['id' => 'age', 'type' => 'smallint', 'table' => 'test'],
             ['id' => 'balance', 'type' => 'float', 'table' => 'test'],
+            ['id' => 'total', 'type' => 'bigint', 'table' => 'test'],
         ]);
 //        $adapter->method('getTableColumns')->willReturn([
 //            ['id' => 'email', 'type' => 'string', 'table' => 'test'],
@@ -346,10 +349,12 @@ class FieldsTest extends TestCase
 
         $this->assertTrue($jsonForm['form'] === 'ui');
 
-        $this->assertCount(6, $jsonForm['items']);
+        $this->assertCount(7, $jsonForm['items']);
     }
 
-
+    /**
+     * @throws EmptyFieldNameException
+     */
     public function testFieldset()
     {
         $fieldset = Fieldset::make('Test', __CLASS__, []);
@@ -369,7 +374,59 @@ class FieldsTest extends TestCase
 
         $this->assertCount(4, $fieldset->getItems());
 
-        var_dump($fieldset->getFormField());
+        $formFields = $fieldset->getFormField();
+
+        $this->assertEquals('user-info', $formFields['attributes']['fieldset']['class']);
+
+        $this->assertCount(4, $formFields['items']);
+
+    }
+
+    /**
+     * @throws EmptyFieldNameException
+     */
+    public function testTabs()
+    {
+        /** @var Tabs $tabs */
+        $tabs = Tabs::make('Test tabs', __CLASS__, []);
+
+        $firstTab = $tabs->pushTab('First tab');
+
+        $secondTabs = $tabs->pushTab('Second tab');
+
+        $firstTab->pushItem(
+            (new Fieldset)
+                ->setName('Test user info')
+                ->setField('test-fieldset')
+                ->setItems([
+                    $this->getField(StringField::class, 'user_name'),
+                    $this->getField(StringField::class, 'email'),
+                ])
+        );
+
+        $secondTabs->pushItem((new Fieldset)
+            ->setName('Test user credential')
+            ->setField('test-fieldset')
+            ->setItems([
+                $this->getField(StringField::class, 'password'),
+                $this->getField(StringField::class, 'confirm_password'),
+            ]));
+
+
+        $formFields = $tabs->getFormField();
+
+        $this->assertEquals(Tabs::FIELD_TYPE, $formFields['type']);
+
+        $this->assertCount(2, $formFields['items']);
+
+        foreach ($formFields['items'] as $item) {
+            $this->assertEquals(TabPane::FIELD_TYPE, $item['type']);
+
+            foreach ($item['items'] as $fieldset) {
+                $this->assertEquals(Fieldset::FIELD_TYPE, $fieldset['type']);
+                $this->assertCount(2, $fieldset['items']);
+            }
+        }
     }
 
     /**
