@@ -3,6 +3,7 @@
 namespace Dg482\Red\Builders\Form\Structure;
 
 use Dg482\Red\Builders\Form\Fields\Field;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 
 /**
  * Class BaseStructure
@@ -52,5 +53,21 @@ abstract class BaseStructure extends Field
         array_unshift($this->items, $field);
 
         return $this;
+    }
+
+
+    /**
+     * Массив параметров поля для отрисовки в UI
+     * @return array
+     * @throws EmptyFieldNameException
+     */
+    public function getFormField(): array
+    {
+        $formField = parent::getFormField();
+        $formField['items'] = array_map(function (Field $field) {
+            return $field->getFormField();
+        }, $this->getItems());
+
+        return $formField;
     }
 }

@@ -5,6 +5,7 @@ namespace Dg482\Red\Tests\Feature;
 use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\BaseForms;
+use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Fields\IntegerField;
 use Dg482\Red\Builders\Form\Fields\SelectField;
@@ -342,7 +343,6 @@ class FieldsTest extends TestCase
         }
 
         $jsonForm = $resource->getForm();
-//        var_dump($jsonForm);
 
         $this->assertTrue($jsonForm['form'] === 'ui');
 
@@ -355,5 +355,40 @@ class FieldsTest extends TestCase
         $fieldset = Fieldset::make('Test', __CLASS__, []);
 
         $this->assertInstanceOf(Fieldset::class, $fieldset);
+
+        $fieldset->setItems([
+            $this->getField(StringField::class, 'user_name'),
+            $this->getField(StringField::class, 'email'),
+        ]);
+
+        $fieldset->pushItem($this->getField(StringField::class, 'password'));
+
+        $fieldset->unshiftItem($this->getField(HiddenField::class, 'user_id'));
+
+        $fieldset->setCssClass('user-info');
+
+        $this->assertCount(4, $fieldset->getItems());
+
+        var_dump($fieldset->getFormField());
+    }
+
+    /**
+     * @param  string  $fieldClass
+     * @param  string  $name
+     * @return mixed
+     */
+    private function getField(string $fieldClass, string $name): Field
+    {
+        /** @var  $field */
+        $field = (new $fieldClass)
+            ->setField($name)// 1 set field
+            ->setAttributes([
+                'readonly' => false,
+            ]) // 2 set attributes
+            ->hideForm()// 2.1
+            ->hideTable()// 2.2
+            ->setName('Test Field');// 3 set field name (label)
+
+        return $field;
     }
 }
