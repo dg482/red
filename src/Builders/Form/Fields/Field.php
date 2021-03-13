@@ -101,7 +101,7 @@ abstract class Field
      */
     public function getField(): string
     {
-        if (empty($this->field)) {var_dump($this);
+        if (empty($this->field)) {
             throw new EmptyFieldNameException();
         }
 

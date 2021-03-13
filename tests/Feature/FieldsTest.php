@@ -379,7 +379,6 @@ class FieldsTest extends TestCase
         $this->assertEquals('user-info', $formFields['attributes']['fieldset']['class']);
 
         $this->assertCount(4, $formFields['items']);
-
     }
 
     /**

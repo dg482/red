@@ -17,6 +17,5 @@ class TabPane extends BaseStructure
 
     public function __construct()
     {
-
     }
 }
