@@ -3,8 +3,12 @@
 namespace Dg482\Red\Builders;
 
 use Dg482\Red\Adapters\Adapter;
+use Dg482\Red\Builders\Form\Fields\BigintField;
+use Dg482\Red\Builders\Form\Fields\FloatField;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\IntegerField;
 use Dg482\Red\Builders\Form\Fields\SelectField;
+use Dg482\Red\Builders\Form\Fields\SmallintField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Model;
 
@@ -56,7 +60,12 @@ class Form
         return [
             StringField::getType(),
             SelectField::getType(),
-            HiddenField::getType()
+            HiddenField::getType(),
+
+            IntegerField::getType(),
+            BigintField::getType(),
+            SmallintField::getType(),
+            FloatField::getType(),
         ];
     }
 }

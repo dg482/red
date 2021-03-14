@@ -6,7 +6,7 @@ namespace Dg482\Red\Builders\Form\Fields;
  * Class FloatField
  * @package Dg482\Red\Builders\Form\Fields
  */
-class FloatField extends IntField
+class FloatField extends IntegerField
 {
     /** @var string */
     protected const FIELD_TYPE = 'float';
