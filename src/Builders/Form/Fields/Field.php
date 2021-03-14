@@ -271,6 +271,6 @@ abstract class Field
      */
     public function isShowForm(): bool
     {
-        return (bool) $this->attributes['showForm'] ?? false;
+        return (bool) (!isset($this->attributes['showForm'])) ? true : $this->attributes['showForm'] ?? false;
     }
 }

@@ -41,7 +41,7 @@ abstract class BaseButton
     /** @var string */
     public string $action = '';
 
-    /** @var bool  */
+    /** @var bool */
     public bool $load = false;
 
     /**
@@ -53,7 +53,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param string $text
+     * @param  string  $text
      * @return BaseButton
      */
     public function setText(string $text): BaseButton
@@ -72,7 +72,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param string $icon
+     * @param  string  $icon
      * @return BaseButton
      */
     public function setIcon(string $icon): BaseButton
@@ -91,7 +91,9 @@ abstract class BaseButton
     }
 
     /**
-     * @param string $shape
+     * can be set to circle, round or omitted
+     *
+     * @param  string  $shape
      * @return BaseButton
      */
     public function setShape(string $shape): BaseButton
@@ -110,7 +112,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      * @return BaseButton
      */
     public function setType(string $type): BaseButton
@@ -129,7 +131,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param bool $block
+     * @param  bool  $block
      * @return BaseButton
      */
     public function setBlock(bool $block): BaseButton
@@ -148,7 +150,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param string $action
+     * @param  string  $action
      * @return BaseButton
      */
     public function setAction(string $action): BaseButton
@@ -167,7 +169,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param bool $load
+     * @param  bool  $load
      * @return BaseButton
      */
     public function setLoad(bool $load): BaseButton
@@ -175,5 +177,21 @@ abstract class BaseButton
         $this->load = $load;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getButtonForm(): array
+    {
+        return [
+            'text' => $this->getText(),
+            'type' => $this->getType(),
+            'action' => $this->getAction(),
+            'icon' => $this->getIcon(),
+            'shape' => $this->getShape(),
+            'isBlock' => $this->isBlock(),
+            'isLoad' => $this->isLoad(),
+        ];
     }
 }

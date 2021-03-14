@@ -6,7 +6,7 @@ namespace Dg482\Red\Builders\Form\Fields;
  * Class SmallintField
  * @package Dg482\Red\Builders\Form\Fields
  */
-class SmallintField extends IntegerField
+class SmallintField extends IntField
 {
     /** @var string */
     protected const FIELD_TYPE = 'smallint';

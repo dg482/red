@@ -2,12 +2,9 @@
 
 namespace Dg482\Red\Tests\Feature;
 
-use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form;
-use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
-use Dg482\Red\Builders\Form\Fields\IntegerField;
 use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
@@ -17,10 +14,7 @@ use Dg482\Red\Builders\Form\Structure\TabPane;
 use Dg482\Red\Builders\Form\Structure\Tabs;
 use Dg482\Red\Exceptions\BadVariantKeyException;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
-use Dg482\Red\Model;
-use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
-use Exception;
 
 /**
  * Class FieldsTest
@@ -253,107 +247,6 @@ class FieldsTest extends TestCase
 
     /**
      * @throws EmptyFieldNameException
-     * @throws Exception
-     */
-    public function testFormFields()
-    {
-        $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
-        $adapter->setTableColumns([
-            ['id' => 'id', 'type' => 'int', 'table' => 'test'],
-            ['id' => 'email', 'type' => 'string', 'table' => 'test'],
-            ['id' => 'name', 'type' => 'string', 'table' => 'test'],
-            ['id' => 'password', 'type' => 'string', 'table' => 'test'],
-            ['id' => 'age', 'type' => 'smallint', 'table' => 'test'],
-            ['id' => 'balance', 'type' => 'float', 'table' => 'test'],
-            ['id' => 'total', 'type' => 'bigint', 'table' => 'test'],
-        ]);
-//        $adapter->method('getTableColumns')->willReturn([
-//            ['id' => 'email', 'type' => 'string', 'table' => 'test'],
-//        ]);
-
-
-        $model = $this->createMock(Model::class);
-
-        /** @var  BaseForms::class $baseForm */
-        $baseForm = $this->getMockBuilder(BaseForms::class)
-            ->setMethods(['formFieldEmail'])
-            ->getMock();
-
-        // 1 configure form
-        $baseForm->setModel($model);
-
-        $baseForm->setValidators([// 1.2 set validate field values
-            'email' => ['required', 'email'],
-            'name' => ['required', 'max:60'],
-            'password' => ['required', 'min:6'],
-        ]);
-
-        $baseForm->setErrorMessages([// 1.3 set error messages
-            'email' => [//<-- field name
-                'email' => 'Поле Email заполненно не корректно!',//<-- validator name
-            ],
-        ]);
-
-        $baseForm->method('formFieldEmail')->willReturn((new StringField));
-
-        // 2.1 create resource, set default adapter
-        $resource = new Resource($adapter);
-        $resource->setModel($model);// 2.2 set Model
-        $resource->setForm($baseForm);// 2.3 set Form
-
-        // 3 configure resource
-        $resource->setHiddenFields([
-            'id',
-        ]);// 3.1 set hidden fields
-
-        $resource->setLabels([// 3.2 set labels
-            'email' => 'Email',
-            'name' => 'Name',
-            'password' => 'Password',
-        ]);
-
-
-        $fields = $resource->fields();
-
-        foreach ($fields as $field) {
-            $validators = $field->getValidators();
-
-            switch ($field->getField()) {
-                case 'id':
-                    $this->assertInstanceOf(HiddenField::class, $field);
-                    break;
-                case 'email':
-                    array_map(function ($validator) {
-                        if ($validator['rule'] === 'email') {
-                            $this->assertEquals('Поле Email заполненно не корректно!', $validator['message']);
-                        }
-                    }, $validators);
-                    $this->assertInstanceOf(StringField::class, $field);
-                    $this->assertCount(2, $validators);
-                    break;
-                case 'name':
-                case 'password':
-                    $this->assertInstanceOf(StringField::class, $field);
-                    $this->assertCount(2, $validators);
-                    break;
-                case 'age':
-                case 'balance':
-                    $this->assertInstanceOf(IntegerField::class, $field);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        $jsonForm = $resource->getForm();
-
-        $this->assertTrue($jsonForm['form'] === 'ui');
-
-        $this->assertCount(7, $jsonForm['items']);
-    }
-
-    /**
-     * @throws EmptyFieldNameException
      */
     public function testFieldset()
     {
@@ -446,5 +339,42 @@ class FieldsTest extends TestCase
             ->setName('Test Field');// 3 set field name (label)
 
         return $field;
+    }
+
+    /**
+     * @throws EmptyFieldNameException
+     */
+    public function testEmptyFieldNameException()
+    {
+        $this->expectException(EmptyFieldNameException::class);
+
+        $field = new StringField();
+        $field->getFormField();
+    }
+
+    /**
+     * @throws BadVariantKeyException
+     * @throws EmptyFieldNameException
+     */
+    public function testBadVariantKeyException()
+    {
+
+        $this->expectException(BadVariantKeyException::class);
+
+        $field = new SelectField(true);
+        $field->setField('empty')->setMultiple(true);
+
+        $field->addVariants([
+            ['id' => 1, 'value' => 'Man'],
+            ['id' => 2, 'value' => 'Woman'],
+        ]);
+
+        $_REQUEST['empty'] = [
+            ['id' => 1, 'value' => 'Man'],
+            ['id' => 2, 'value' => 'Woman'],
+            ['id' => null, 'value' => 'Bad variant'],
+        ];
+
+        $field->getValue();//throws EmptyFieldNameException
     }
 }
