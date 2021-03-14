@@ -11,13 +11,14 @@ use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
+use Dg482\Red\Tests\TestCase;
 use Exception;
 
 /**
  * Class FormTest
  * @package Dg482\Red\Tests\Feature
  */
-class FormTest extends FieldsTest
+class FormTest extends TestCase
 {
     /**
      * @throws EmptyFieldNameException
