@@ -7,6 +7,7 @@ use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\BaseForms;
+use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
@@ -314,7 +315,7 @@ class Resource
     }
 
     /**
-     * @param  string[]  $actions
+     * @param  array  $actions
      * @return Resource
      */
     public function setActions(array $actions): Resource
@@ -440,6 +441,10 @@ class Resource
             return $field;
         }, $fields);
 
+        $fields = array_filter($fields, function (Field $field) {
+            return $field->isShowForm();
+        });
+
         return array_map(function (Field $field) use ($validators, $error_message) {
 
             $method = 'formField'.ucfirst($field->getField());
@@ -489,6 +494,14 @@ class Resource
     }
 
     /**
+     * @return BaseForms
+     */
+    public function getFormModel(): BaseForms
+    {
+        return $this->formModel;
+    }
+
+    /**
      * @return array
      * @throws Exception
      */
@@ -498,7 +511,9 @@ class Resource
             'title' => $this->formModel->getFormTitle(),
             'form' => $this->formModel->getFormName(),
             'items' => $this->fields(),
-            'actions' => $this->formModel->getActions(),
+            'actions' => array_map(function (Button $button) {
+                return $button->getButtonForm();
+            }, $this->formModel->getActions()),
             'values' => $this->getValues(),
             'validator' => $this->formModel->getValidators(),
             'context' => $this->getContext(),

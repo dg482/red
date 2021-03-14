@@ -6,7 +6,7 @@ namespace Dg482\Red\Builders\Form\Fields;
  * Class BigintField
  * @package Dg482\Red\Builders\Form\Fields
  */
-class BigintField extends IntegerField
+class BigintField extends IntField
 {
     /** @var string */
     protected const FIELD_TYPE = 'bigint';

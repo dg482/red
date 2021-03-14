@@ -32,7 +32,7 @@ class BaseForms
     /** @var string */
     protected string $formName = 'ui';
 
-    /** @var string[] */
+    /** @var array */
     private array $actions = [];
 
     /** @var Resource */
@@ -99,7 +99,7 @@ class BaseForms
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function getActions(): array
     {
@@ -125,7 +125,7 @@ class BaseForms
     }
 
     /**
-     * @param  string[]  $actions
+     * @param  array $actions
      * @return $this
      */
     public function setActions(array $actions): self

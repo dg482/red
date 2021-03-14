@@ -22,8 +22,9 @@ class StringField extends Field
      */
     public function __construct(bool $isMultiple = false)
     {
+        $this->setMultiple($isMultiple);
         $stringValue = new StringValue(0, '');
-        $value = ($isMultiple) ? (new FieldValues())->push($stringValue) : $stringValue;
+        $value = ($this->isMultiple()) ? (new FieldValues())->push($stringValue) : $stringValue;
         $this->value = &$value;
     }
 
