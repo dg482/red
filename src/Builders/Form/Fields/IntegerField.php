@@ -9,7 +9,7 @@ use Dg482\Red\Builders\Form\Fields\Values\IntegerValue;
  * Class IntegerField
  * @package Dg482\Red\Builders\Form\Fields
  */
-class IntField extends Field
+class IntegerField extends Field
 {
     /** @var bool */
     protected bool $unsigned = false;

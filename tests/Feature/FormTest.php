@@ -6,7 +6,7 @@ use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
-use Dg482\Red\Builders\Form\Fields\IntField;
+use Dg482\Red\Builders\Form\Fields\IntegerField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
@@ -28,7 +28,7 @@ class FormTest extends TestCase
     {
         $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
         $adapter->setTableColumns([
-            ['id' => 'id', 'type' => 'int', 'table' => 'test'],
+            ['id' => 'id', 'type' => 'integer', 'table' => 'test'],
             ['id' => 'email', 'type' => 'string', 'table' => 'test'],
             ['id' => 'name', 'type' => 'string', 'table' => 'test'],
             ['id' => 'password', 'type' => 'string', 'table' => 'test'],
@@ -107,7 +107,7 @@ class FormTest extends TestCase
                     break;
                 case 'age':
                 case 'balance':
-                    $this->assertInstanceOf(IntField::class, $field);
+                    $this->assertInstanceOf(IntegerField::class, $field);
                     break;
                 default:
                     break;
