@@ -510,7 +510,9 @@ class Resource
         return [
             'title' => $this->formModel->getFormTitle(),
             'form' => $this->formModel->getFormName(),
-            'items' => $this->fields(),
+            'items' => array_map(function (Field $field) {
+                return $field->getFormField();
+            }, $this->fields()),
             'actions' => array_map(function (Button $button) {
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
