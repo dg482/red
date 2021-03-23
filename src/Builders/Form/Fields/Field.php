@@ -56,6 +56,9 @@ abstract class Field
      */
     public function getFormField(): array
     {
+        /** @var FieldValues|StringValue|array $value */
+        $value = $this->getValue();
+
         return [
             'id' => empty($this->id) ? time() + rand(1, 99999) : $this->id,
             'name' => $this->getName(),
@@ -64,7 +67,15 @@ abstract class Field
             'disabled' => $this->isDisabled(),
             'attributes' => $this->getAttributes(),
             'validators' => $this->getValidators(),
-            'value' => (array) $this->getValue(),
+            'value' => (!$this->isMultiple()) ? [
+                'id' => $value->getId(),
+                'value' => $value->getValue(),
+            ] : array_map(function (FieldValues $value) {
+                return [
+                    'id' => $value->getId(),
+                    'value' => $value->getValue(),
+                ];
+            }, $value),
         ];
     }
 

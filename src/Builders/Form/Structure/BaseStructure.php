@@ -63,11 +63,16 @@ abstract class BaseStructure extends Field
      */
     public function getFormField(): array
     {
-        $formField = parent::getFormField();
-        $formField['items'] = array_map(function (Field $field) {
-            return $field->getFormField();
-        }, $this->getItems());
-
-        return $formField;
+        return [
+            'id' => empty($this->id) ? time() + rand(1, 99999) : $this->id,
+            'name' => $this->getName(),
+            'type' => $this->getFieldType(),
+            'field' => $this->getField(),
+            'disabled' => $this->isDisabled(),
+            'attributes' => $this->getAttributes(),
+            'items' => array_map(function (Field $field) {
+                return $field->getFormField();
+            }, $this->getItems()),
+        ];
     }
 }
