@@ -5,7 +5,6 @@ namespace Dg482\Red\Adapters;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form;
 use Dg482\Red\Commands\Crud\Command;
-use Dg482\Red\Commands\Crud\Read;
 use Dg482\Red\Commands\Interfaces\CommandInterfaces;
 use Dg482\Red\Model;
 
@@ -32,31 +31,13 @@ abstract class Adapter implements AdapterInterfaces
         $result = [];
 
         array_map(function (string $type) use (&$result) {
-            $targetClass = 'Dg482\\Red\\Builders\\Form\\Fields\\'.ucfirst($type).'Field';
+            $targetClass = 'Dg482\\Red\\Builders\\Form\\Fields\\' . ucfirst($type) . 'Field';
             if (class_exists($targetClass)) {
                 $result[$type] = $targetClass;
             }
         }, Form::getSupportFieldsType());
 
         return $result;
-    }
-
-    /**
-     * @param  int  $limit
-     * @return array
-     */
-    public function read($limit = 1): array
-    {
-        $cmd = (new Read())
-            ->setAdapter($this)
-            ->setMultiple($limit > 1)
-            ->setPerPage($limit);
-
-        $this->setCommand($cmd);
-
-        $this->execute();
-
-        return $this->getCommand()->getResult();
     }
 
     /**
@@ -76,7 +57,7 @@ abstract class Adapter implements AdapterInterfaces
     }
 
     /**
-     * @param  CommandInterfaces  $cmd
+     * @param CommandInterfaces $cmd
      */
     public function setCommand(CommandInterfaces $cmd): void
     {
@@ -108,8 +89,8 @@ abstract class Adapter implements AdapterInterfaces
     }
 
     /**
-     * @param  Model  $model
-     * @param  array  $ignoreColumns
+     * @param Model $model
+     * @param array $ignoreColumns
      * @return array
      */
     public function getTableColumns(Model $model, array $ignoreColumns = []): array
@@ -118,7 +99,7 @@ abstract class Adapter implements AdapterInterfaces
     }
 
     /**
-     * @param  array  $tableColumns
+     * @param array $tableColumns
      * @return Adapter
      */
     public function setTableColumns(array $tableColumns): Adapter

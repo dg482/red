@@ -3,9 +3,11 @@
 namespace Dg482\Red\Tests\Feature;
 
 use Dg482\Red\Adapters\BaseAdapter;
+use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
+use Exception;
 
 /**
  * Class ResourceTest
@@ -14,10 +16,11 @@ use Dg482\Red\Tests\TestCase;
 class ResourceTest extends TestCase
 {
     /**
-     *
+     * @throws Exception
      */
     public function testResource()
     {
+
         $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
         $adapter->setTableColumns([
             ['id' => 'id', 'type' => 'int', 'table' => 'test'],
@@ -28,8 +31,28 @@ class ResourceTest extends TestCase
         $model = $this->createMock(Model::class);
 
 
+        /** @var  BaseForms::class $baseForm */
+        $baseForm = new BaseForms();
+
+        // 1 configure form
+        $baseForm->setModel($model);
+
         // 2.1 create resource, set default adapter
         $resource = new Resource($adapter);
+        $resource->setTitle('Test Users');
         $resource->setModel($model);// 2.2 set Model
+        $resource->setForm($baseForm);// 2.3 set Form
+
+        $resource->setLabels([// 3.2 set labels
+            'id' => '#',
+            'email' => 'Email',
+            'name' => 'Name',
+        ]);
+
+        $arResource = $resource->getTable();
+
+        $this->assertEquals('Test Users', $arResource['title']);
+
+//        $this->assertTrue(1 == 0);
     }
 }

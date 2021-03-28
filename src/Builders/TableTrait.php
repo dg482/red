@@ -122,7 +122,7 @@ trait TableTrait
                         if ($relationModel instanceof IteratorAggregate) {
                             $field->setFieldValue($relationModel);
                         } else {
-                            $relationFieldMethod = $this->camel($id);
+                            $relationFieldMethod = $id;// $this->camel($id);
 
                             if (method_exists($relationModel, $relationFieldMethod)) {
                                 $field->setFieldRelation($relationModel, $relationModel->{$relationFieldMethod});
@@ -189,7 +189,7 @@ trait TableTrait
      * @param $paginator
      * @return array
      */
-    protected function getPagination($paginator)
+    protected function getPagination($paginator): array
     {
         $paginator['perPage'] = $paginator['perPage'] ?? 10;
 
@@ -207,13 +207,13 @@ trait TableTrait
      * @param $field
      * @return array
      */
-    protected function buildColumn($id, $field): array
+    protected function buildColumn($id, Field $field): array
     {
         $fieldId = $field->id ?? $id;
         $column = [
             'id' => $fieldId,
             'key' => $fieldId,
-            'name' => $field->name ?? $fieldId,
+            'name' => $field->getName() ?? $fieldId,
             'type' => $field->getFieldType(),
             'dataIndex' => $id,
             'ellipsis' => true,
@@ -221,7 +221,7 @@ trait TableTrait
             'title' => (isset($this->labels[$id])) ? $this->labels[$id] : $id,
         ];
 
-        switch ($column[Field::getType()]) {
+        switch ($field->getFieldType()) {
             case FileField::FIELD_TYPE:
                 $column['scopedSlots'] = [
                     'customRender' => 'file',
@@ -237,7 +237,7 @@ trait TableTrait
     /**
      * @return array
      */
-    public function getColumns(): array
+    protected function getColumns(): array
     {
         // columns table
         $setColumns = [];
@@ -252,7 +252,7 @@ trait TableTrait
     /**
      * @return array
      */
-    public function getFieldsTable(): array
+    protected function getFieldsTable(): array
     {
         return array_filter($this->fields(), function (Field $field) {
             return $field->isShowTable();
