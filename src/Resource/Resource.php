@@ -11,6 +11,7 @@ use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
+use Dg482\Red\Builders\TableTrait;
 use Dg482\Red\Commands\Crud\Read;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\Create as ActionCreate;
@@ -36,6 +37,8 @@ use Exception;
  */
 class Resource
 {
+    use TableTrait;
+
     /**
      * Кол-во элементов на страницу
      * @var int

@@ -121,6 +121,9 @@ class FormTest extends TestCase
         $this->assertCount(7, $jsonForm['items']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testFormActions()
     {
         $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);

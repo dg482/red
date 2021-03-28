@@ -22,16 +22,10 @@ abstract class Field
     /** @var int $id */
     public int $id = 0;
 
-    /**
-     * Field label
-     * @var string $name
-     */
+    /** @var string $name Field label */
     protected string $name = '';
 
-    /**
-     * Model field
-     * @var string $field
-     */
+    /** @var string $field Model field */
     protected string $field = '';
 
     /**
