@@ -21,7 +21,6 @@ class ResourceTest extends TestCase
      */
     public function testResource()
     {
-
         $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
         $adapter->setTableColumns([
             ['id' => 'id', 'type' => 'int', 'table' => 'test'],
@@ -30,7 +29,6 @@ class ResourceTest extends TestCase
         ]);
 
         $model = $this->createMock(Model::class);
-
 
         /** @var  BaseForms::class $baseForm */
         $baseForm = new BaseForms();
@@ -54,11 +52,58 @@ class ResourceTest extends TestCase
 
         $resource->setRowActions([ActionDelete::class]);
 
+        // set adapter result
+        $resource->getAdapter()->getCommand()->setResult([
+            (new TestUser)->create([1, 'example@domain.com', 'Test User One']),
+            (new TestUser)->create([2, 'example@domain.com', 'Test User Two']),
+            (new TestUser)->create([3, 'example@domain.com', 'Test User Three']),
+            (new TestUser)->create([4, 'example@domain.com', 'Test User Four']),
+        ]);
+
         $arResource = $resource->getTable();
 
         $this->assertEquals('Test Users', $arResource['title']);
 
         $this->assertCount(4, $arResource['columns']);
         $this->assertCount(1, $arResource['actions']);
+
+        var_dump($arResource);
+    }
+}
+
+/**
+ * Class TestUser
+ * @package Dg482\Red\Tests\Feature
+ */
+class TestUser implements Model
+{
+    /** @var int */
+    public int $id;
+
+    /** @var string */
+    public string $email;
+
+    /** @var string */
+    public string $name;
+
+    public function update(array $attributes, array $options = [])
+    {
+        return false;
+    }
+
+    public function getFields(): array
+    {
+        return ['id', 'email', 'name'];
+    }
+
+    public function create(array $request): Model
+    {
+        list($this->id, $this->email, $this->name) = $request;
+        return $this;
+    }
+
+    public function getFillable()
+    {
+        return ['email', 'name'];
     }
 }

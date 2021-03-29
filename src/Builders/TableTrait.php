@@ -99,17 +99,18 @@ trait TableTrait
 
         // формирование основных данных по модели
         array_map(function (Model $item) use (&$items, $columns, $relations) {
-            $resultItems = ['_id' => $item->id];
+            $resultItems = ['id' => $item->id];
             array_map(function (Field $field) use ($item, &$resultItems) {
                 $id = $field->getField();
                 if (strpos($id, '|') !== false) {
                     $id = explode('|', $id);
                     $id = end($id);
-                    // $field->setFieldValue($item->{$id});
-                    $resultItems[$id] = $field->getFieldValue();
+                    $field->setValue($item->{$id});
+                    $resultItems[$id] = $field->getValue();
                 } else {
-                    // $field->setFieldValue($item->{$field->getField()});
-                    $resultItems[$field->getField()] = $field->getFieldValue();
+                    $field->setValue($item->{$id});
+                    $resultItems[$id] = $field->isMultiple() ? $field->getValue()->getValues() :
+                        $field->getValue()->getValue();
                 }
             }, $columns);
 
@@ -120,14 +121,14 @@ trait TableTrait
                     array_map(function (Field $field) use ($item, $relation, $relationModel, &$resultItems) {
                         $id = str_replace(['|', $relation], '', $field->getField());
                         if ($relationModel instanceof IteratorAggregate) {
-                            $field->setFieldValue($relationModel);
+//                            $field->setFieldValue($relationModel);
                         } else {
                             $relationFieldMethod = $id;// $this->camel($id);
 
                             if (method_exists($relationModel, $relationFieldMethod)) {
                                 $field->setFieldRelation($relationModel, $relationModel->{$relationFieldMethod});
                             }
-                            $field->setFieldValue($relationModel->{$id});
+//                            $field->setFieldValue($relationModel->{$id});
                         }
                         $resultItems[$field->getField()] = $field->getFieldValue();
                     }, $fields);
