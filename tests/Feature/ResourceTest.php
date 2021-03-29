@@ -8,6 +8,7 @@ use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
 use Exception;
+use Dg482\Red\Resource\Actions\Delete as ActionDelete;
 
 /**
  * Class ResourceTest
@@ -20,7 +21,6 @@ class ResourceTest extends TestCase
      */
     public function testResource()
     {
-
         $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
         $adapter->setTableColumns([
             ['id' => 'id', 'type' => 'int', 'table' => 'test'],
@@ -29,7 +29,6 @@ class ResourceTest extends TestCase
         ]);
 
         $model = $this->createMock(Model::class);
-
 
         /** @var  BaseForms::class $baseForm */
         $baseForm = new BaseForms();
@@ -49,10 +48,24 @@ class ResourceTest extends TestCase
             'name' => 'Name',
         ]);
 
+        $resource->setActions([ActionDelete::class]);
+
+        $resource->setRowActions([ActionDelete::class]);
+
+        // set adapter result
+        $resource->getAdapter()->getCommand()->setResult([
+            (new TestUser)->create([1, 'example@domain.com', 'Test User One']),
+            (new TestUser)->create([2, 'example@domain.com', 'Test User Two']),
+            (new TestUser)->create([3, 'example@domain.com', 'Test User Three']),
+            (new TestUser)->create([4, 'example@domain.com', 'Test User Four']),
+        ]);
+
         $arResource = $resource->getTable();
 
         $this->assertEquals('Test Users', $arResource['title']);
 
-//        $this->assertTrue(1 == 0);
+        $this->assertCount(4, $arResource['columns']);
+        $this->assertCount(1, $arResource['actions']);
+        $this->assertCount(4, $arResource['data']);
     }
 }

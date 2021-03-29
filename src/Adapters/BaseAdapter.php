@@ -64,8 +64,9 @@ class BaseAdapter extends Adapter
      */
     public function read($limit = 1): array
     {
-        $cmd = (new Read())
-            ->setAdapter($this)
+        $cmd = $this->getCommand() ?? (new Read());
+
+        $cmd->setAdapter($this)
             ->setMultiple($limit > 1)
             ->setPerPage($limit);
 
