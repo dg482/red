@@ -242,7 +242,7 @@ class Resource
      * @param  null  $relation
      * @return Resource
      */
-    public function setRelation($relation)
+    public function setRelation($relation): Resource
     {
         $this->relation = $relation;
 

@@ -8,6 +8,7 @@ use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
 use Exception;
+use Dg482\Red\Resource\Actions\Delete as ActionDelete;
 
 /**
  * Class ResourceTest
@@ -49,10 +50,15 @@ class ResourceTest extends TestCase
             'name' => 'Name',
         ]);
 
+        $resource->setActions([ActionDelete::class]);
+
+        $resource->setRowActions([ActionDelete::class]);
+
         $arResource = $resource->getTable();
 
         $this->assertEquals('Test Users', $arResource['title']);
 
-//        $this->assertTrue(1 == 0);
+        $this->assertCount(4, $arResource['columns']);
+        $this->assertCount(1, $arResource['actions']);
     }
 }
