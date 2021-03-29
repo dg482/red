@@ -8,7 +8,6 @@ namespace Dg482\Red\Resource;
  */
 class RelationResource extends Resource
 {
-    use ResourceTrait;
 
     /** @var string */
     protected string $field = 'table';
