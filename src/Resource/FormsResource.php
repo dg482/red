@@ -10,8 +10,6 @@ use Dg482\Red\Adapters\Adapter;
  */
 class FormsResource extends Resource
 {
-    use ResourceTrait;
-
     /**
      * FormsResource constructor.
      * @param  Adapter  $adapter

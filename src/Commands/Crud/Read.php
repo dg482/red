@@ -18,7 +18,9 @@ class Read extends Command implements CommandInterfaces
      */
     public function execute(): bool
     {
-        $this->result = $this->getAdapter()->read();
+        if (empty($this->result)) {
+            $this->setResult([]);// set result read cmd
+        }
 
         return (!empty($this->result));
     }

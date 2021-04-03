@@ -5,18 +5,16 @@ namespace Dg482\Red\Resource;
 use Dg482\Red\Adapters\Adapter;
 use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
-use Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
-use Dg482\Red\Builders\Form\Structure\BaseStructure;
+use Dg482\Red\Builders\TableTrait;
 use Dg482\Red\Commands\Crud\Read;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\Create as ActionCreate;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
 use Dg482\Red\Resource\Actions\Update as ActionUpdate;
-use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Exception;
 
 /**
@@ -36,6 +34,8 @@ use Exception;
  */
 class Resource
 {
+    use TableTrait;
+
     /**
      * Кол-во элементов на страницу
      * @var int
@@ -163,41 +163,6 @@ class Resource
         $this->adapter = $adapter;
     }
 
-
-    /**
-     * Фильтр полей
-     * @param  string  $method
-     * @param  array  $fields
-     * @return array|array[]
-     * @throws EmptyFieldNameException
-     */
-    protected function filterFields(string $method, array $fields): array
-    {
-        $original = (in_array($this->getContext(), [Form::class, FormsResource::class]));
-
-        return array_map(function (Field $field) use ($original) {
-
-            if (!$field instanceof BaseStructure) {
-                if (false === empty($field->getField())) {
-                    // set model field value
-                    $this->values[$field->getField()] = $field->getFieldValue($original);
-
-                    if ([] !== $field->getValidators()) {
-                        $this->validators[$field->getField()] = $field->getValidators();
-                    }
-                }
-            }
-
-            return $field->getFormField();
-        }, array_filter($fields, function (Field $field) use ($method) {
-            if ($field instanceof BaseStructure) {
-                $field->setItems($this->filterFields($method, $field->getItems()));
-            }
-
-            return $field->{$method}();
-        }));
-    }
-
     /**
      * Значения полей модели
      *
@@ -239,7 +204,7 @@ class Resource
      * @param  null  $relation
      * @return Resource
      */
-    public function setRelation($relation)
+    public function setRelation($relation): Resource
     {
         $this->relation = $relation;
 
@@ -414,7 +379,7 @@ class Resource
 
     /**
      * @return Field[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function fields(): array
     {
