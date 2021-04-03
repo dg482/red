@@ -25,13 +25,6 @@ interface Model
     public function getFields(): array;
 
     /**
-     * Обертка над методом создания модели
-     * @param  array  $request
-     * @return Model
-     */
-    public function create(array $request): Model;
-
-    /**
      * Массив полей автозаполнения
      * @return array
      */
