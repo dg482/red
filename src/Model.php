@@ -16,13 +16,7 @@ interface Model
      * @param  array  $options
      * @return bool
      */
-    public function update(array $attributes, array $options = []);
-
-    /**
-     * Получить поля авто заполнения
-     * @return array
-     */
-    public function getFields(): array;
+    public function updateModel(array $attributes, array $options = []);
 
     /**
      * Массив полей автозаполнения

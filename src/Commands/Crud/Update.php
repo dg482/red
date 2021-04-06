@@ -28,7 +28,7 @@ class Update extends Command implements CommandInterfaces
         $model = $this->getModel();
         $request = $this->getData();
 
-        if ($update = $model->update($this->getData())) {
+        if ($update = $model->updateModel($this->getData())) {
             foreach ($this->getRelations() as $id => $instance) {
                 /** @var Model $relationModel */
                 $relationModel = $model->{$id};
@@ -42,7 +42,7 @@ class Update extends Command implements CommandInterfaces
                     }, $relationModel->getFillable());
 
                     if (false === empty($updateRelationRequest)) {
-                        $relationModel->update($updateRelationRequest);
+                        $relationModel->updateModel($updateRelationRequest);
                     }
                 }
             }
