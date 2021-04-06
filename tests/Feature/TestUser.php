@@ -19,22 +19,35 @@ class TestUser implements Model
     /** @var string */
     public string $name;
 
-    public function update(array $attributes, array $options = [])
+    public function updateModel(array $attributes, array $options = [])
     {
         return false;
     }
 
-    public function getFields(): array
+    /**
+     * @return string[]
+     */
+    public function getFieldsModel(): array
     {
         return ['id', 'email', 'name'];
     }
 
+    /**
+     * create model stub
+     *
+     * @param  array  $request
+     * @return Model
+     */
     public function create(array $request): Model
     {
         list($this->id, $this->email, $this->name) = $request;
         return $this;
     }
 
+    /**
+     *
+     * @return string[]
+     */
     public function getFillable()
     {
         return ['email', 'name'];
