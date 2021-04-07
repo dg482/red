@@ -19,7 +19,7 @@ class TestUser implements Model
     /** @var string */
     public string $name;
 
-    public function updateModel(array $attributes, array $options = [])
+    public function updateModel(array $attributes, array $options = []): bool
     {
         return false;
     }
