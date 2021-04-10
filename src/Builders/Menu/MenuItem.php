@@ -34,6 +34,9 @@ class MenuItem
         'user', 'admin',
     ];
 
+    /** @var array  */
+    protected array $meta = [];
+
     public function __construct(int $id = 0)
     {
         $this->id = $id ?: (microtime(true) + rand(5, 5000));
@@ -212,6 +215,10 @@ class MenuItem
             $result['badge'] = $this->getBadge();
         }
 
+        if ([] !== $this->getMeta()) {
+            $result['meta'] = $this->getMeta();
+        }
+
         return $result;
     }
 
@@ -249,6 +256,25 @@ class MenuItem
     public function setParentId(int $parentId): MenuItem
     {
         $this->parentId = $parentId;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMeta(): array
+    {
+        return $this->meta;
+    }
+
+    /**
+     * @param  array  $meta
+     * @return MenuItem
+     */
+    public function setMeta(array $meta): MenuItem
+    {
+        $this->meta = $meta;
 
         return $this;
     }

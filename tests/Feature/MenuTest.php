@@ -37,6 +37,9 @@ class MenuTest extends TestCase
                 ->setChild((new MenuItem)
                     ->setTitle('Онлайн запись')
                     ->setHref('/company/online-registration')
+                    ->setMeta([
+                        'component' => 'RouteView',
+                    ])
                     ->addChild('Настройки', '/company/online-registration/setting')))
             ->getMenuItems();
 
