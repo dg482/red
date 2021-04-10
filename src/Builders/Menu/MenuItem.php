@@ -34,8 +34,16 @@ class MenuItem
         'user', 'admin',
     ];
 
-    /** @var array  */
-    protected array $meta = [];
+    /** @var array */
+    protected array $meta = [
+        'show' => true,
+    ];
+
+    /** @var string default ui component */
+    protected string $component = 'RouteView';
+
+    /** @var string */
+    protected string $redirect = '';
 
     public function __construct(int $id = 0)
     {
@@ -58,6 +66,8 @@ class MenuItem
     {
         $this->title = $title;
 
+        $this->meta['title'] = $title;
+
         return $this;
     }
 
@@ -76,6 +86,8 @@ class MenuItem
     public function setIcon(string $icon): MenuItem
     {
         $this->icon = $icon;
+
+        $this->meta['icon'] = $icon;
 
         return $this;
     }
@@ -204,6 +216,8 @@ class MenuItem
             'title' => $this->getTitle(),
             'icon' => $this->getIcon(),
             'href' => $this->getHref(),
+            'component' => $this->getComponent(),
+            'redirect' => $this->getRedirect(),
         ];
         $child = $this->getChildItems();
 
@@ -274,7 +288,45 @@ class MenuItem
      */
     public function setMeta(array $meta): MenuItem
     {
-        $this->meta = $meta;
+        $this->meta = array_merge($this->meta, $meta);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComponent(): string
+    {
+        return $this->component;
+    }
+
+    /**
+     * @param  string  $component
+     * @return MenuItem
+     */
+    public function setComponent(string $component): MenuItem
+    {
+        $this->component = $component;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirect(): string
+    {
+        return $this->redirect;
+    }
+
+    /**
+     * @param  string  $redirect
+     * @return MenuItem
+     */
+    public function setRedirect(string $redirect): MenuItem
+    {
+        $this->redirect = $redirect;
 
         return $this;
     }

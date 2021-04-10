@@ -18,7 +18,8 @@ class MenuTest extends TestCase
             ->setMenu((new MenuItem)
                 ->setTitle('Расписание')
                 ->setIcon('pe-7s-clock')
-                ->setHref('/online-request')
+                ->setHref('/calendar')
+                ->setRedirect('/dashboard/calendar')
                 ->setBadge([
                     'text' => 12,
                     'class' => 'vsm--badge badge badge-push badge-danger',
@@ -37,12 +38,18 @@ class MenuTest extends TestCase
                 ->setChild((new MenuItem)
                     ->setTitle('Онлайн запись')
                     ->setHref('/company/online-registration')
+                    ->setComponent('OnlineRequest')
                     ->setMeta([
-                        'component' => 'RouteView',
+                        'show' => 'true',
                     ])
                     ->addChild('Настройки', '/company/online-registration/setting')))
             ->getMenuItems();
 
         $this->assertCount(3, $menu);
+
+        $this->assertEquals('RouteView', $menu[0]['component']);
+        $this->assertEquals('/calendar', $menu[0]['href']);
+        $this->assertEquals('pe-7s-clock', $menu[0]['icon']);
+        $this->assertEquals('Расписание', $menu[0]['meta']['title']);
     }
 }
