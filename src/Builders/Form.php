@@ -22,7 +22,7 @@ class Form
     private Model $model;
 
     /** @var Adapter */
-    private Adapter $adapter;
+//    private Adapter $adapter;
 
     /**
      * Form constructor.
