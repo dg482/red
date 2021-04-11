@@ -16,6 +16,7 @@ class MenuTest extends TestCase
     {
         $menu = (new Frontend)
             ->setMenu((new MenuItem)
+                ->setName('schedule')
                 ->setTitle('Расписание')
                 ->setIcon('pe-7s-clock')
                 ->setHref('/calendar')

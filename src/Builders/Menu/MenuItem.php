@@ -11,6 +11,9 @@ class MenuItem
     /** @var int */
     private int $id = 0;
 
+    /** @var string */
+    private string $name = '';
+
     /** @var int */
     private int $parentId = 0;
 
@@ -212,6 +215,7 @@ class MenuItem
     {
         $result = [
             'id' => $this->getId(),
+            'name' => $this->getName(),
             'parentId' => $this->getParentId(),
             'title' => $this->getTitle(),
             'icon' => $this->getIcon(),
@@ -327,6 +331,25 @@ class MenuItem
     public function setRedirect(string $redirect): MenuItem
     {
         $this->redirect = $redirect;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param  string  $name
+     * @return MenuItem
+     */
+    public function setName(string $name): MenuItem
+    {
+        $this->name = $name;
 
         return $this;
     }
