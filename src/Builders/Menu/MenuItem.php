@@ -213,31 +213,22 @@ class MenuItem
      */
     public function getData(): array
     {
-        $result = [
+        return array_filter([
             'id' => $this->getId(),
             'name' => $this->getName(),
             'parentId' => $this->getParentId(),
             'title' => $this->getTitle(),
             'icon' => $this->getIcon(),
             'href' => $this->getHref(),
+            'path' => $this->getHref(),
             'component' => $this->getComponent(),
             'redirect' => $this->getRedirect(),
-        ];
-        $child = $this->getChildItems();
-
-        if ([] !== $child) {
-            $result['child'] = $child;
-        }
-
-        if ([] !== $this->getBadge()) {
-            $result['badge'] = $this->getBadge();
-        }
-
-        if ([] !== $this->getMeta()) {
-            $result['meta'] = $this->getMeta();
-        }
-
-        return $result;
+            'child' => $this->getChildItems(),
+            'badge' => $this->getBadge(),
+            'meta' => $this->getMeta(),
+        ], function ($value) {
+            return !empty($value) || $value === 0;
+        });
     }
 
     /**
