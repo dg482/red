@@ -125,10 +125,16 @@ class Resource
     protected array $tables = [];
 
     /**
-     * Название ресурсы, используется в UI
+     * Название ресурса, используется в UI
      * @var string
      */
     protected string $title = '';
+
+    /**
+     * Иконка ресурса, используется в UI
+     * @var string
+     */
+    protected string $icon = 'setting';
 
     /**
      * Resource constructor.
@@ -464,6 +470,25 @@ class Resource
     public function getFormModel(): BaseForms
     {
         return $this->formModel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @param  string  $icon
+     * @return Resource
+     */
+    public function setIcon(string $icon): Resource
+    {
+        $this->icon = $icon;
+
+        return $this;
     }
 
     /**

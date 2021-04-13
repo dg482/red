@@ -34,11 +34,14 @@ class ResourceTest extends TestCase
         $baseForm = new BaseForms();
 
         // 1 configure form
-        $baseForm->setModel($model);
+        $baseForm->setModel($model)
+            ->setFormName('user_edit')
+            ->setTitle('Edit test user');
 
         // 2.1 create resource, set default adapter
         $resource = new Resource($adapter);
         $resource->setTitle('Test Users');
+        $resource->setIcon('users');
         $resource->setModel($model);// 2.2 set Model
         $resource->setForm($baseForm);// 2.3 set Form
 
@@ -63,9 +66,15 @@ class ResourceTest extends TestCase
         $arResource = $resource->getTable();
 
         $this->assertEquals('Test Users', $arResource['title']);
-
+        $this->assertEquals('users', $resource->getIcon());
         $this->assertCount(4, $arResource['columns']);
         $this->assertCount(1, $arResource['actions']);
         $this->assertCount(4, $arResource['data']);
+
+
+        $arForm = $resource->getForm();
+
+        $this->assertEquals('user_edit', $arForm['form']);
+        $this->assertEquals('Edit test user', $arForm['title']);
     }
 }
