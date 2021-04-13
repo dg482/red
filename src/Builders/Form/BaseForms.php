@@ -99,6 +99,17 @@ class BaseForms
     }
 
     /**
+     * @param  string  $title
+     * @return BaseForms
+     */
+    public function setTitle(string $title): BaseForms
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getActions(): array
@@ -125,7 +136,7 @@ class BaseForms
     }
 
     /**
-     * @param  array $actions
+     * @param  array  $actions
      * @return $this
      */
     public function setActions(array $actions): self
@@ -141,5 +152,16 @@ class BaseForms
     public function getFormName(): string
     {
         return $this->formName;
+    }
+
+    /**
+     * @param  string  $formName
+     * @return $this
+     */
+    public function setFormName(string $formName): self
+    {
+        $this->formName = $formName;
+
+        return $this;
     }
 }
