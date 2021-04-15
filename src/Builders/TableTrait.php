@@ -57,20 +57,20 @@ trait TableTrait
             return $this->tables[$cls];
         }
 
+        /** @var Adapter $adapter */
+        $adapter = $this->getAdapter();
+        $adapter->setModel(new $this->model);
+
         if ($this instanceof RelationResource) {
             $collection = $this->getCollection();
         } else {
-            /** @var Adapter $adapter */
-            $adapter = $this->getAdapter();
-            $adapter->setModel(new $this->model);
-
             /** @var array */
             $collection = $adapter->read($this->getPageSize());
         }
 
         $paginator = [
-            'items' => $collection ?? [],
-            'total' => ($collection) ? count($collection) : 1,
+            'items' => $adapter->getCommand()->getResult() ?? [],
+            'total' => $collection['total'] ?? 0,
             'perPage' => $this->getPageSize(),
         ];
 
@@ -144,7 +144,9 @@ trait TableTrait
             'data' => $items,
             'actions' => $this->getActionList($this->getActions()),
             'rowActions' => $this->getActionList($this->getRowActions()),
-            'pagination' => $this->getPagination($paginator),
+            'pagination' => [
+                'total' => $paginator['total'],
+            ],
         ];
 
         if ($this instanceof RelationResource) {
