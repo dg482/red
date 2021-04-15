@@ -5,9 +5,11 @@ namespace Dg482\Red\Tests\Feature;
 use Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\IntegerField;
 use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
+use Dg482\Red\Builders\Form\Fields\Values\IntegerValue;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 use Dg482\Red\Builders\Form\Structure\Fieldset;
 use Dg482\Red\Builders\Form\Structure\TabPane;
@@ -93,6 +95,32 @@ class FieldsTest extends TestCase
         $this->assertCount(2, $field->getValue()->getValues());
     }
 
+    public function testIntegerField()
+    {
+        /** @var StringField $field */
+        $field = $this->fieldTest(IntegerField::class, 'int');
+
+        $this->assertFalse($field->isMultiple());
+
+        $field->setValue(150);
+
+        $this->assertInstanceOf(IntegerValue::class, $field->getValue());
+
+        $this->assertEmpty($field->getValue()->getId());
+
+        $this->assertEquals(150, $field->getValue()->getValue());
+
+        // updated value object
+        $field->getValue()
+            ->setId(4)
+            ->setValue(250);
+
+
+        $this->assertEquals(4, $field->getValue()->getId());
+        $this->assertEquals(250, $field->getValue()->getValue());
+    }
+
+
     public function testTextField()
     {
         try {
@@ -101,14 +129,14 @@ class FieldsTest extends TestCase
 
             $this->assertFalse($field->isMultiple());
 
-            $this->assertTrue('string' === $field->getFieldType());
+            $this->assertEquals('string', $field->getFieldType());
 
             $field->setValue('test value');
 
             $this->assertInstanceOf(StringValue::class, $field->getValue());
 
             $this->assertEmpty($field->getValue()->getId());
-            $this->assertTrue('test value' === $field->getValue()->getValue());
+            $this->assertEquals('test value', $field->getValue()->getValue());
 
             // updated value object
             $field->getValue()
