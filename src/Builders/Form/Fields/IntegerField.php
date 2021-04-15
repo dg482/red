@@ -23,8 +23,21 @@ class IntegerField extends Field
      */
     public function __construct(bool $isMultiple = false)
     {
+        $this->setMultiple($isMultiple);
         $intValue = new IntegerValue();
-        $value = ($isMultiple) ? (new FieldValues())->push($intValue) : $intValue;
+        $value = ($this->isMultiple()) ? (new FieldValues())->push($intValue) : $intValue;
         $this->value = &$value;
     }
+
+    /**
+     * @param  string  $value
+     * @return Field
+     */
+    public function setValue(string $value = ''): Field
+    {
+        $this->value->setValue($value);
+
+        return $this;
+    }
+
 }
