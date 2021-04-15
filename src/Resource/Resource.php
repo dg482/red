@@ -55,6 +55,12 @@ class Resource
     protected string $command = Read::class;
 
     /**
+     * Определение текущей модели ресурса
+     * @var string
+     */
+    protected string $resourceModel = '';
+
+    /**
      * Текущая модель ресурса
      * @var Model
      */
@@ -146,6 +152,10 @@ class Resource
 
         $this->setAdapter($adapter);
 
+        if (!empty($this->resourceModel) && class_exists($this->resourceModel)) {
+            $this->setModel(new $this->resourceModel);
+        }
+
         $this->initResource(__CLASS__);
     }
 
@@ -199,9 +209,9 @@ class Resource
     }
 
     /**
-     * @return null|string
+     * @return Model|null
      */
-    public function getRelation()
+    public function getRelation(): ?Model
     {
         return $this->relation;
     }
@@ -430,7 +440,7 @@ class Resource
             }
 
             if ($this->getRelation()) {
-                $field->setField($this->getRelation().'|'.$key);  //set relation name
+                $field->setField(get_class($this->getRelation()).'|'.$key);  //set relation name
             }
 
             if (isset($validators[$key])) {
