@@ -55,6 +55,12 @@ class Resource
     protected string $command = Read::class;
 
     /**
+     * Определение текущей модели ресурса
+     * @var string
+     */
+    protected string $resourceModel;
+
+    /**
      * Текущая модель ресурса
      * @var Model
      */
@@ -145,6 +151,10 @@ class Resource
         $adapter->setCommand((new $this->command));
 
         $this->setAdapter($adapter);
+
+        if ($this->resourceModel && class_exists($this->resourceModel)) {
+            $this->setModel(new $this->resourceModel);
+        }
 
         $this->initResource(__CLASS__);
     }
