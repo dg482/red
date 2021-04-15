@@ -82,7 +82,7 @@ class Resource
      * Модель формы
      * @var BaseForms
      */
-    protected BaseForms $formModel;
+    protected ?BaseForms $formModel = null;
 
     /** @var string */
     protected string $context = '';
@@ -475,9 +475,9 @@ class Resource
     }
 
     /**
-     * @return BaseForms
+     * @return BaseForms|null
      */
-    public function getFormModel(): BaseForms
+    public function getFormModel(): ?BaseForms
     {
         return $this->formModel;
     }
