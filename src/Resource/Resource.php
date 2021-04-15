@@ -148,13 +148,15 @@ class Resource
      */
     public function __construct(Adapter $adapter)
     {
-        $adapter->setCommand((new $this->command));
+        $adapter->setCommand((new $this->command));// init command
 
-        $this->setAdapter($adapter);
+        $this->setAdapter($adapter); // set db adapter
 
         if (!empty($this->resourceModel) && class_exists($this->resourceModel)) {
-            $this->setModel(new $this->resourceModel);
+            $this->setModel(new $this->resourceModel);// set resource model
         }
+
+        $form = $this->getFormModel();// init and set form
 
         $this->initResource(__CLASS__);
     }
@@ -479,6 +481,7 @@ class Resource
      */
     public function getFormModel(): ?BaseForms
     {
+        // implement init form here
         return $this->formModel;
     }
 
