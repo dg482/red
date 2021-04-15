@@ -39,5 +39,4 @@ class IntegerField extends Field
 
         return $this;
     }
-
 }
