@@ -58,7 +58,7 @@ class Resource
      * Определение текущей модели ресурса
      * @var string
      */
-    protected string $resourceModel;
+    protected string $resourceModel = '';
 
     /**
      * Текущая модель ресурса
@@ -152,7 +152,7 @@ class Resource
 
         $this->setAdapter($adapter);
 
-        if ($this->resourceModel && class_exists($this->resourceModel)) {
+        if (!empty($this->resourceModel) && class_exists($this->resourceModel)) {
             $this->setModel(new $this->resourceModel);
         }
 
@@ -209,9 +209,9 @@ class Resource
     }
 
     /**
-     * @return null|string
+     * @return Model|null
      */
-    public function getRelation()
+    public function getRelation(): ?Model
     {
         return $this->relation;
     }
@@ -440,7 +440,7 @@ class Resource
             }
 
             if ($this->getRelation()) {
-                $field->setField($this->getRelation().'|'.$key);  //set relation name
+                $field->setField(get_class($this->getRelation()).'|'.$key);  //set relation name
             }
 
             if (isset($validators[$key])) {
