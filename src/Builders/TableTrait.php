@@ -105,10 +105,10 @@ trait TableTrait
                 if (strpos($id, '|') !== false) {
                     $id = explode('|', $id);
                     $id = end($id);
-                    $field->setValue($item->{$id});
+                    $field->setValue($item->{$id} ?? '');
                     $resultItems[$id] = $field->getValue();
                 } else {
-                    $field->setValue($item->{$id});
+                    $field->setValue($item->{$id} ?? '');
                     $resultItems[$id] = $field->isMultiple() ? $field->getValue()->getValues() :
                         $field->getValue()->getValue();
                 }
