@@ -150,11 +150,12 @@ class Resource
     {
         $adapter->setCommand((new $this->command));// init command
 
-        $this->setAdapter($adapter); // set db adapter
-
         if (!empty($this->resourceModel) && class_exists($this->resourceModel)) {
             $this->setModel(new $this->resourceModel);// set resource model
+            $adapter->setModel($this->getModel());
         }
+
+        $this->setAdapter($adapter); // set db adapter
 
         $form = $this->getFormModel();// init and set form
 
