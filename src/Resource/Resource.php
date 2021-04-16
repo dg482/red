@@ -467,6 +467,8 @@ class Resource
      */
     public function setForm(BaseForms $form): Resource
     {
+        $form->setResource($this);
+
         $this->formModel = $form;// 1.1 init form
 
         $this->setModel($this->formModel->getModel());// 1.2 set form model
@@ -516,7 +518,7 @@ class Resource
             'form' => $this->formModel->getFormName(),
             'items' => array_map(function (Field $field) {
                 return $field->getFormField();
-            }, $this->fields()),
+            }, $this->formModel->resourceFields()),
             'actions' => array_map(function (Button $button) {
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
