@@ -11,7 +11,7 @@ use Exception;
  * Class BaseForms
  * @package App\Models\Forms
  */
-class BaseForms
+class BaseForms implements FormModelInterface
 {
     use ValidatorsTrait;
 
@@ -61,6 +61,17 @@ class BaseForms
     public function resource(): Resource
     {
         return $this->resource;
+    }
+
+    /**
+     * @param  Resource  $resource
+     * @return $this
+     */
+    public function setResource(Resource $resource): self
+    {
+        $this->resource = $resource;
+
+        return $this;
     }
 
     /**
@@ -163,5 +174,14 @@ class BaseForms
         $this->formName = $formName;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function resourceFields(): array
+    {
+        return $this->fields();
     }
 }

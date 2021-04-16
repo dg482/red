@@ -7,6 +7,7 @@ use Dg482\Red\Adapters\Adapter;
 /**
  * Class FormsResource
  * @package Dg482\Red\Resource
+ * @deprecated
  */
 class FormsResource extends Resource
 {
