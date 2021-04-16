@@ -405,6 +405,7 @@ class Resource
         $validators = $this->formModel->getValidators();
         $error_message = $this->formModel->getErrorMessages();
 
+        // 1.1 init Field
         $fields = $this->adapter->getTableColumns($this->model, $this->hidden_fields);
 
         // 1.3 build Fields list
@@ -456,6 +457,8 @@ class Resource
                     }
                 }, $validators[$key]);
             }
+
+            $this->values[$field->getField()] = $field->getValue()->getValue();// set values to global object
 
             return $field;
         }, $fields);
@@ -513,6 +516,9 @@ class Resource
      */
     public function getForm(): array
     {
+        $adapter = $this->getAdapter();
+        $arModel = $adapter->read(1);
+
         return [
             'title' => $this->formModel->getFormTitle(),
             'form' => $this->formModel->getFormName(),

@@ -11,7 +11,7 @@ use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 abstract class Command
 {
     /** @var array */
-    protected array $result;
+    protected array $result = [];
 
     /** @var AdapterInterfaces */
     protected AdapterInterfaces $adapter;
