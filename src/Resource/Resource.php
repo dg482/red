@@ -88,7 +88,7 @@ class Resource
     /** @var string */
     protected string $context = '';
 
-    /** @var array */
+    /** @var array validators array*/
     protected array $validators = [
         'id' => 'required',
     ];
@@ -405,7 +405,7 @@ class Resource
      */
     public function fields(): array
     {
-        $validators = $this->formModel->getValidators();
+        $validators = array_merge($this->formModel->getValidators(), $this->validators);
         $error_message = $this->formModel->getErrorMessages();
 
         // 1.1 init Field
@@ -532,7 +532,7 @@ class Resource
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
             'values' => $this->getValues(),
-            'validator' => $this->formModel->getValidators(),
+            'validator' => array_merge($this->formModel->getValidators(), $this->validators),// merge resource and form validators
             'context' => $this->getContext(),
         ];
     }
