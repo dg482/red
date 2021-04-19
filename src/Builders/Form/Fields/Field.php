@@ -11,7 +11,7 @@ use Dg482\Red\TranslateTrait;
 
 /**
  * Class Field
- * @package Dg482\Red\Fields
+ * @package Dg482\Red\Builders\Form\Fields
  */
 abstract class Field
 {

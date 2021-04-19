@@ -10,10 +10,11 @@ use Dg482\Red\Exceptions\EmptyFieldNameException;
 
 /**
  * Class SelectField
- * @package Dg482\Red\Fields
+ * @package Dg482\Red\Builders\Form\Fields
  */
 class SelectField extends StringField
 {
+    /** @var string  */
     protected const FIELD_TYPE = 'select';
 
     /** @var array[FieldValue] */
