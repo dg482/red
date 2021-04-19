@@ -35,6 +35,9 @@ class FormTest extends TestCase
             ['id' => 'age', 'type' => 'smallint', 'table' => 'test'],
             ['id' => 'balance', 'type' => 'float', 'table' => 'test'],
             ['id' => 'total', 'type' => 'bigint', 'table' => 'test'],
+            ['id' => 'dob', 'type' => 'date', 'table' => 'test'],
+            ['id' => 'active', 'type' => 'switch', 'table' => 'test'],
+            ['id' => 'last_time', 'type' => 'datetime', 'table' => 'test'],
         ]);
 //        $adapter->method('getTableColumns')->willReturn([
 //            ['id' => 'email', 'type' => 'string', 'table' => 'test'],
@@ -118,7 +121,7 @@ class FormTest extends TestCase
 
         $this->assertTrue($jsonForm['form'] === 'ui');
 
-        $this->assertCount(7, $jsonForm['items']);
+        $this->assertCount(10, $jsonForm['items']);
     }
 
     /**
