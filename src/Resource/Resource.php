@@ -16,7 +16,6 @@ use Dg482\Red\Resource\Actions\Create as ActionCreate;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
 use Dg482\Red\Resource\Actions\Update as ActionUpdate;
 use Exception;
-use stdClass;
 
 /**
  * Ресурс модели
@@ -88,9 +87,9 @@ class Resource
     /** @var string */
     protected string $context = '';
 
-    /** @var array */
+    /** @var array validators array */
     protected array $validators = [
-        'id' => 'required',
+        'id' => ['required'],
     ];
 
     /**
@@ -405,7 +404,7 @@ class Resource
      */
     public function fields(): array
     {
-        $validators = $this->formModel->getValidators();
+        $validators = array_merge($this->formModel->getValidators(), $this->validators);
         $error_message = $this->formModel->getErrorMessages();
 
         // 1.1 init Field
@@ -532,7 +531,8 @@ class Resource
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
             'values' => $this->getValues(),
-            'validator' => $this->formModel->getValidators(),
+            // merge resource and form validators
+            'validator' => array_merge($this->formModel->getValidators(), $this->validators),
             'context' => $this->getContext(),
         ];
     }
