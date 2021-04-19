@@ -531,7 +531,8 @@ class Resource
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
             'values' => $this->getValues(),
-            'validator' => array_merge($this->formModel->getValidators(), $this->validators),// merge resource and form validators
+            // merge resource and form validators
+            'validator' => array_merge($this->formModel->getValidators(), $this->validators),
             'context' => $this->getContext(),
         ];
     }
