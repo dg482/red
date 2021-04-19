@@ -16,6 +16,7 @@ use Dg482\Red\Resource\Actions\Create as ActionCreate;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
 use Dg482\Red\Resource\Actions\Update as ActionUpdate;
 use Exception;
+use stdClass;
 
 /**
  * Ресурс модели
@@ -88,7 +89,9 @@ class Resource
     protected string $context = '';
 
     /** @var array */
-    protected array $validators = [];
+    protected array $validators = [
+        'id' => 'required',
+    ];
 
     /**
      * Список доступных действий для таблицы
