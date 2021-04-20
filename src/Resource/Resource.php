@@ -12,6 +12,7 @@ use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
 use Dg482\Red\Builders\TableTrait;
 use Dg482\Red\Commands\Crud\Read;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\Create as ActionCreate;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
@@ -195,6 +196,7 @@ class Resource
      * Значения полей модели
      *
      * @return array
+     * @throws EmptyFieldNameException
      */
     public function getValues(): array
     {
@@ -207,7 +209,7 @@ class Resource
 
     /**
      * @param  Field  $field
-     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
+     * @throws EmptyFieldNameException
      */
     private function itemValue(Field $field)
     {
