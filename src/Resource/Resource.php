@@ -9,8 +9,10 @@ use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Structure\BaseStructure;
 use Dg482\Red\Builders\TableTrait;
 use Dg482\Red\Commands\Crud\Read;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\Create as ActionCreate;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
@@ -41,6 +43,9 @@ class Resource
      * @var int
      */
     protected const PAGE_SIZE = 50;
+
+    /** @var array */
+    private array $fields = [];
 
     /**
      * Адаптер для работы с БД
@@ -191,10 +196,34 @@ class Resource
      * Значения полей модели
      *
      * @return array
+     * @throws EmptyFieldNameException
      */
     public function getValues(): array
     {
+        array_map(function (Field $field) {
+            $this->itemValue($field);
+        }, $this->fields);
+
         return $this->values;
+    }
+
+    /**
+     * @param  Field  $field
+     * @throws EmptyFieldNameException
+     */
+    private function itemValue(Field $field)
+    {
+        if ($field instanceof BaseStructure) {
+            $this->itemValue($field);
+        } else {
+            $idx = $field->getField();
+            if (empty($this->values[$idx])) {
+                $this->values[$idx] = $field->getValue()->getValue();
+            }
+            if (empty($this->validators[$idx])) {
+                $this->validators[$idx] = $field->getValidatorsClient();
+            }
+        }
     }
 
     /**
@@ -435,7 +464,7 @@ class Resource
             return $field->isShowForm();
         });
 
-        return array_map(function (Field $field) use ($validators, $error_message) {
+        $this->fields = array_map(function (Field $field) use ($validators, $error_message) {
 
             $method = 'formField'.ucfirst($field->getField());
             $key = $field->getField();
@@ -468,6 +497,8 @@ class Resource
 
             return $field;
         }, $fields);
+
+        return $this->fields;
     }
 
     /**
@@ -525,11 +556,10 @@ class Resource
         $adapter = $this->getAdapter();
         $arModel = $adapter->read(1);
 
-
         return [
             'title' => $this->formModel->getFormTitle(),
             'form' => $this->formModel->getFormName(),
-            'items' => array_map(function (Field $field) use (&$validators) {
+            'items' => array_map(function (Field $field) {
                 return $field->getFormField(true);
             }, $this->formModel->resourceFields()),
             'actions' => array_map(function (Button $button) {
