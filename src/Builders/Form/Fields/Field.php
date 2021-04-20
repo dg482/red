@@ -45,10 +45,11 @@ abstract class Field
 
     /**
      * Массив параметров поля для отрисовки в UI
+     * @param  bool  $isClientValidator
      * @return array
      * @throws EmptyFieldNameException
      */
-    public function getFormField(): array
+    public function getFormField(bool $isClientValidator = false): array
     {
         /** @var FieldValues|StringValue|array $value */
         $value = $this->getValue();
@@ -60,7 +61,7 @@ abstract class Field
             'field' => $this->getField(),
             'disabled' => $this->isDisabled(),
             'attributes' => $this->getAttributes(),
-            'validators' => $this->getValidators(),
+            'validators' => $isClientValidator ? $this->getValidatorsClient() : $this->getValidators(),
             'value' => (!$this->isMultiple()) ? [
                 'id' => $value->getId(),
                 'value' => $value->getValue(),

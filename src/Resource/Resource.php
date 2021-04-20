@@ -520,19 +520,26 @@ class Resource
     {
         $adapter = $this->getAdapter();
         $arModel = $adapter->read(1);
+        $validators = [];
+        $items = array_map(function (Field $field) use (&$validators) {
+            $data = $field->getFormField(true);
+            if (!empty($data['validators'])) {
+                $validators[$field->getField()] = $data['validators'];
+            }
+
+            return $data;
+        }, $this->formModel->resourceFields());
 
         return [
             'title' => $this->formModel->getFormTitle(),
             'form' => $this->formModel->getFormName(),
-            'items' => array_map(function (Field $field) {
-                return $field->getFormField();
-            }, $this->formModel->resourceFields()),
+            'items' => $items,
             'actions' => array_map(function (Button $button) {
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
             'values' => $this->getValues(),
             // merge resource and form validators
-            'validator' => array_merge($this->formModel->getValidators(), $this->validators),
+            'validator' => $validators,//array_merge($this->formModel->getValidators(), $this->validators),
             'context' => $this->getContext(),
         ];
     }

@@ -32,10 +32,11 @@ class FileField extends SelectField
 
     /**
      * Массив параметров поля для отрисовки в UI
+     * @param  bool  $isClientValidator
      * @return array
      * @throws EmptyFieldNameException
      */
-    public function getFormField(): array
+    public function getFormField(bool $isClientValidator = false): array
     {
         $result = parent::getFormField();
 

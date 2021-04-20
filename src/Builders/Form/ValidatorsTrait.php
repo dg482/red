@@ -70,7 +70,15 @@ trait ValidatorsTrait
                 case 'required':
                     $result['required'] = true;
                     break;
+                case 'email':
+                    $result['type'] = 'email';
+                    break;
                 default:
+                    array_map(function (string $idx) use (&$result, $validator) {
+                        if (isset($validator[$idx])) {
+                            $result[$idx] = $validator[$idx];
+                        }
+                    }, ['min', 'max', 'length']);
                     break;
             }
             switch ($result['type']) {
