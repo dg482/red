@@ -198,7 +198,7 @@ class FieldsTest extends TestCase
      */
     protected function fieldTest($fieldClass, $name)
     {
-        /** @var  $field */
+        /** @var Field $field */
         $field = (new $fieldClass)
             ->setField($name)// 1 set field
             ->setAttributes([
@@ -237,6 +237,7 @@ class FieldsTest extends TestCase
             ->addValidators('max:80');
 
         $this->assertCount(5, $field->getValidators());
+        $this->assertCount(5, $field->getValidatorsClient());
 
         // 6 set sample data
         $field->setData(['data' => 123]);

@@ -54,6 +54,46 @@ trait ValidatorsTrait
     }
 
     /**
+     * Валидаторы для UI
+     *
+     * @return array
+     */
+    public function getValidatorsClient(): array
+    {
+        return array_map(function (array $validator) {
+            $result = [
+                'type' => $validator['type'] ?? self::getType(),
+                'trigger' => $validator['trigger'],
+                'message' => $validator['message'],
+            ];
+            switch ($validator['rule']) {
+                case 'required':
+                    $result['required'] = true;
+                    break;
+                case 'email':
+                    $result['type'] = 'email';
+                    break;
+                default:
+                    array_map(function (string $idx) use (&$result, $validator) {
+                        if (isset($validator[$idx])) {
+                            $result[$idx] = $validator[$idx];
+                        }
+                    }, ['min', 'max', 'length']);
+                    break;
+            }
+            switch ($result['type']) {
+                case 'enum':
+                    $result['enum'] = $validator['enum'];
+                    break;
+                default:
+                    break;
+            }
+
+            return $result;
+        }, $this->validators);
+    }
+
+    /**
      * @param  array  $validators
      * @return $this
      */
@@ -73,7 +113,7 @@ trait ValidatorsTrait
     public function addValidators(string $rule, ?string $message = '', ?string $idx = ''): self
     {
         $resultRule = [
-            'idx' => $idx,
+//            'idx' => $idx,
             'rule' => $rule,
             'trigger' => $this->trigger,
             'message' => $message ?? '',
@@ -122,9 +162,9 @@ trait ValidatorsTrait
     }
 
     /**
-     * @param $idx
-     * @param $name
-     * @param $rule
+     * @param  string  $idx
+     * @param  string  $name
+     * @param  array  $rule
      */
     protected function initRule(string $idx, string $name, array &$rule)
     {
@@ -142,8 +182,8 @@ trait ValidatorsTrait
             case 'size':
             case 'min':
                 if (isset($arguments[1])) {
-                    $rule[$idx === 'size' ? 'max' : $idx] = (int)$arguments[1];
-                    $rule['length'] = (int)$arguments[1];
+                    $rule[$idx === 'size' ? 'max' : $idx] = (int) $arguments[1];
+                    $rule['length'] = (int) $arguments[1];
                 }
                 break;
             case 'in':

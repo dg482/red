@@ -58,10 +58,11 @@ abstract class BaseStructure extends Field
 
     /**
      * Массив параметров поля для отрисовки в UI
+     * @param  bool  $isClientValidator
      * @return array
      * @throws EmptyFieldNameException
      */
-    public function getFormField(): array
+    public function getFormField(bool $isClientValidator = false): array
     {
         return [
             'id' => empty($this->id) ? time() + rand(1, 99999) : $this->id,
