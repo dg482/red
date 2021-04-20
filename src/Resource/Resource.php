@@ -92,6 +92,9 @@ class Resource
         'id' => ['required'],
     ];
 
+    /** @var array */
+    protected array $validatorsClient = [];
+
     /**
      * Список доступных действий для таблицы
      * @var string[]
@@ -460,6 +463,7 @@ class Resource
                 }, $validators[$key]);
             }
 
+            $this->validatorsClient[$field->getField()] = $field->getValidatorsClient();
             $this->values[$field->getField()] = $field->getValue()->getValue();// set values to global object
 
             return $field;
@@ -520,26 +524,20 @@ class Resource
     {
         $adapter = $this->getAdapter();
         $arModel = $adapter->read(1);
-        $validators = [];
-        $items = array_map(function (Field $field) use (&$validators) {
-            $data = $field->getFormField(true);
-            if (!empty($data['validators'])) {
-                $validators[$field->getField()] = $data['validators'];
-            }
 
-            return $data;
-        }, $this->formModel->resourceFields());
 
         return [
             'title' => $this->formModel->getFormTitle(),
             'form' => $this->formModel->getFormName(),
-            'items' => $items,
+            'items' => array_map(function (Field $field) use (&$validators) {
+                return $field->getFormField(true);
+            }, $this->formModel->resourceFields()),
             'actions' => array_map(function (Button $button) {
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
             'values' => $this->getValues(),
             // merge resource and form validators
-            'validator' => $validators,//array_merge($this->formModel->getValidators(), $this->validators),
+            'validator' => $this->validatorsClient,
             'context' => $this->getContext(),
         ];
     }
