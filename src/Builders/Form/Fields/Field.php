@@ -83,7 +83,7 @@ abstract class Field
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      * @return $this
      */
     public function setName(string $name): Field
@@ -115,7 +115,7 @@ abstract class Field
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      * @return $this
      */
     public function setField(string $field): Field
@@ -134,7 +134,7 @@ abstract class Field
     }
 
     /**
-     * @param bool $disabled
+     * @param  bool  $disabled
      * @return $this|self
      */
     public function setDisabled(bool $disabled): self
@@ -145,7 +145,7 @@ abstract class Field
     }
 
     /**
-     * @param array $attributes
+     * @param  array  $attributes
      * @return $this
      */
     public function setAttributes(array $attributes): Field
@@ -194,7 +194,7 @@ abstract class Field
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return Field
      */
     public function setData(array $data): Field
@@ -206,8 +206,8 @@ abstract class Field
 
 
     /**
-     * @param string $name
-     * @param mixed $default
+     * @param  string  $name
+     * @param  mixed  $default
      * @return mixed
      */
     protected function request(string $name, $default)
@@ -228,15 +228,15 @@ abstract class Field
                     $this->value = new FieldValues();
                 }
                 array_map(function ($value) {
-                    $this->value->push(new StringValue((int)$value['id'], (string)$value['value']));
-                }, (array)$value);
+                    $this->value->push(new StringValue((int) $value['id'], (string) $value['value']));
+                }, (array) $value);
             } else {
                 if (is_array($value) && isset($value['id'])) {
-                    $this->value->setId((int)$value['id'])
-                        ->setValue((string)$value['value']);
+                    $this->value->setId((int) $value['id'])
+                        ->setValue((string) $value['value']);
                 } else {
                     if (is_string($value)) {
-                        $this->value->setValue((string)$value);
+                        $this->value->setValue((string) $value);
                     }
                 }
             }
@@ -246,7 +246,7 @@ abstract class Field
     }
 
     /**
-     * @param bool $multiple
+     * @param  bool  $multiple
      * @return Field
      */
     public function setMultiple(bool $multiple): Field
@@ -277,7 +277,7 @@ abstract class Field
      */
     public function isShowForm(): bool
     {
-        return (bool)(!isset($this->attributes['showForm'])) ? true : $this->attributes['showForm'] ?? false;
+        return (bool) (!isset($this->attributes['showForm'])) ? true : $this->attributes['showForm'] ?? false;
     }
 
     /**
@@ -285,6 +285,28 @@ abstract class Field
      */
     public function isShowTable(): bool
     {
-        return (bool)(!isset($this->attributes['showTable'])) ? true : $this->attributes['showTable'] ?? false;
+        return (bool) (!isset($this->attributes['showTable'])) ? true : $this->attributes['showTable'] ?? false;
+    }
+
+    /**
+     * @param  array  $validators
+     * @return $this
+     */
+    public function setValidators(array $validators): self
+    {
+        if (empty($validators)) {
+            $this->validators = [];
+        } else {
+            array_map(function (string $rule) {
+                $idx = current(explode(':', $rule));
+                if (isset($this->error_messages[$idx])) {
+                    $this->addValidators($rule, $this->error_messages[$idx], $idx);
+                } else {
+                    $this->addValidators($rule, null, $idx);
+                }
+            }, $validators);
+        }
+
+        return $this;
     }
 }

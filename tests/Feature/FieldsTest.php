@@ -255,7 +255,11 @@ class FieldsTest extends TestCase
         $field->setTranslator(null);
         $this->assertCount(0, $field->getValidators());
 
-        $field->setRequired()
+        $field
+            ->setErrorMessages([
+                'required' => 'Field required',
+            ])
+            ->setValidators(['required', 'min:10'])
             ->setDisabled(true);
 
         $this->assertTrue($field->isDisabled());
