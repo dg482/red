@@ -214,18 +214,22 @@ class Resource
     private function itemValue(Field $field)
     {
         if ($field instanceof BaseStructure) {
-            $this->itemValue($field);
+            array_map(function (Field $field) {
+                $this->itemValue($field);
+            }, $field->getItems());
         } else {
             $idx = $field->getField();
             if (empty($this->values[$idx])) {
                 $this->values[$idx] = $field->getValue()->getValue();
             }
+            if (empty($this->validatorsClient[$idx])) {
+                $this->validatorsClient[$idx] = $field->getValidatorsClient();
+            }
             if (empty($this->validators[$idx])) {
-                $this->validators[$idx] = $field->getValidatorsClient();
+                $this->validators[$idx] = $field->getValidators();
             }
         }
     }
-
     /**
      * @return Model
      */
@@ -556,12 +560,15 @@ class Resource
         $adapter = $this->getAdapter();
         $arModel = $adapter->read(1);
 
+        $items = array_map(function (Field $field) {
+            $this->itemValue($field);
+            return $field->getFormField(true);
+        }, $this->formModel->resourceFields());
+
         return [
             'title' => $this->formModel->getFormTitle(),
             'form' => $this->formModel->getFormName(),
-            'items' => array_map(function (Field $field) {
-                return $field->getFormField(true);
-            }, $this->formModel->resourceFields()),
+            'items' => $items,
             'actions' => array_map(function (Button $button) {
                 return $button->getButtonForm();
             }, $this->formModel->getActions()),
