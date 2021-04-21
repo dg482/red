@@ -8,6 +8,7 @@ use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Fields\IntegerField;
 use Dg482\Red\Builders\Form\Fields\StringField;
+use Dg482\Red\Builders\Form\Fields\SwitchField;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
@@ -38,6 +39,7 @@ class FormTest extends TestCase
             ['id' => 'dob', 'type' => 'date', 'table' => 'test'],
             ['id' => 'active', 'type' => 'switch', 'table' => 'test'],
             ['id' => 'last_time', 'type' => 'datetime', 'table' => 'test'],
+            ['id' => 'switch', 'type' => 'switch', 'table' => 'test'],
         ]);
 //        $adapter->method('getTableColumns')->willReturn([
 //            ['id' => 'email', 'type' => 'string', 'table' => 'test'],
@@ -121,7 +123,19 @@ class FormTest extends TestCase
 
         $this->assertTrue($jsonForm['form'] === 'ui');
 
-        $this->assertCount(10, $jsonForm['items']);
+        $this->assertCount(11, $jsonForm['items']);
+    }
+
+    public function testSwitchField()
+    {
+        $field = new SwitchField();
+        $valueDisabled = $field->setField('switch')->disable()->getValue();
+        $this->assertTrue('' === $valueDisabled->getValue());
+        $this->assertTrue(-1 === $valueDisabled->getId());
+
+        $enableValue = $field->enable()->getValue();
+        $this->assertTrue('true' === $enableValue->getValue());
+        $this->assertTrue(1 === $enableValue->getId());
     }
 
     /**
