@@ -137,11 +137,13 @@ trait ValidatorsTrait
 
     /**
      * @param  array  $error_messages
-     * @return void
+     * @return $this
      */
-    public function setErrorMessages(array $error_messages): void
+    public function setErrorMessages(array $error_messages): self
     {
         $this->error_messages = $error_messages;
+
+        return $this;
     }
 
     /**
