@@ -14,7 +14,7 @@ use Dg482\Red\Exceptions\EmptyFieldNameException;
  */
 class SelectField extends StringField
 {
-    /** @var string  */
+    /** @var string */
     protected const FIELD_TYPE = 'select';
 
     /** @var array[FieldValue] */
@@ -65,18 +65,20 @@ class SelectField extends StringField
     {
         $value = $this->request($this->getField(), $this->isMultiple() ? [] : 0);
 
-        if (!$this->isMultiple()) {
-            return $this->getVariantById($value);
-        } else {
-            if (!$this->value instanceof FieldValues) {
-                $this->value = new FieldValues();
-            }
-            array_map(function (array $value) {
-                if (empty($value['id'])) {
-                    throw new BadVariantKeyException();
+        if (!empty($value)) {
+            if (!$this->isMultiple()) {
+                return $this->getVariantById($value);
+            } else {
+                if (!$this->value instanceof FieldValues) {
+                    $this->value = new FieldValues();
                 }
-                $this->value->push($this->getVariantById($value['id']));
-            }, $value);
+                array_map(function (array $value) {
+                    if (empty($value['id'])) {
+                        throw new BadVariantKeyException();
+                    }
+                    $this->value->push($this->getVariantById($value['id']));
+                }, $value);
+            }
         }
 
         return $this->value;
