@@ -3,6 +3,7 @@
 namespace Dg482\Red\Builders\Form\Fields;
 
 use Dg482\Red\Exceptions\BadVariantKeyException;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 
 /**
  * Class SwitchField
@@ -82,5 +83,20 @@ class SwitchField extends SelectField
         $this->setValue($state ? 'true' : '');
 
         return $this;
+    }
+
+    /**
+     * Массив параметров поля для отрисовки в UI
+     * @param  bool  $isClientValidator
+     * @return array
+     * @throws EmptyFieldNameException
+     */
+    public function getFormField(bool $isClientValidator = false): array
+    {
+        $result = parent::getFormField($isClientValidator);
+
+        $result['value'] = !empty($result['value']);
+
+        return $result;
     }
 }

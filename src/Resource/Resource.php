@@ -9,6 +9,7 @@ use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\SwitchField;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
 use Dg482\Red\Builders\TableTrait;
 use Dg482\Red\Commands\Crud\Read;
@@ -221,6 +222,9 @@ class Resource
             $idx = $field->getField();
             if (empty($this->values[$idx])) {
                 $this->values[$idx] = $field->getValue()->getValue();
+                if ($this->isBoolValueField($field)) {
+                    $this->values[$idx] = !empty($this->values[$idx]);
+                }
             }
             if (empty($this->validatorsClient[$idx])) {
                 $this->validatorsClient[$idx] = $field->getValidatorsClient();
@@ -230,6 +234,16 @@ class Resource
             }
         }
     }
+
+    /**
+     * @param  Field  $field
+     * @return bool
+     */
+    private function isBoolValueField(Field $field): bool
+    {
+        return ($field instanceof SwitchField);
+    }
+
     /**
      * @return Model
      */
@@ -562,6 +576,7 @@ class Resource
 
         $items = array_map(function (Field $field) {
             $this->itemValue($field);
+
             return $field->getFormField(true);
         }, $this->formModel->resourceFields());
 
