@@ -99,4 +99,23 @@ class SwitchField extends SelectField
 
         return $result;
     }
+
+    /**
+     * @return string
+     */
+    public function getAction(): string
+    {
+        return $this->action;
+    }
+
+    /**
+     * @param  string  $action
+     * @return SwitchField
+     */
+    public function setAction(string $action): SwitchField
+    {
+        $this->action = $action;
+
+        return $this;
+    }
 }

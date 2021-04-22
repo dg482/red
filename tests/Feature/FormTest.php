@@ -136,6 +136,9 @@ class FormTest extends TestCase
         $enableValue = $field->enable()->getValue();
         $this->assertTrue('true' === $enableValue->getValue());
         $this->assertTrue(1 === $enableValue->getId());
+
+        $field->setAction('user/off');
+        $this->assertEquals('user/off', $field->getAction());
     }
 
     /**
