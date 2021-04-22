@@ -3,6 +3,7 @@
 namespace Dg482\Red\Tests\Feature;
 
 use Dg482\Red\Builders\Form;
+use Dg482\Red\Builders\Form\Fields\DisplayField;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Fields\IntegerField;
@@ -409,5 +410,14 @@ class FieldsTest extends TestCase
         ];
 
         $field->getValue();//throws EmptyFieldNameException
+    }
+
+    public function testDisplayField()
+    {
+        $field = new DisplayField();
+
+        $field->setCssStyle(['textAlign' => 'center']);
+
+        $this->assertArrayHasKey('textAlign', $field->getCssStyle());
     }
 }
