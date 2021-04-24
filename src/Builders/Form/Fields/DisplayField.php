@@ -2,6 +2,8 @@
 
 namespace Dg482\Red\Builders\Form\Fields;
 
+use Dg482\Red\Exceptions\EmptyFieldNameException;
+
 /**
  * Class DisplayField
  * @package Dg482\Red\Builders\Form\Fields
@@ -31,5 +33,18 @@ class DisplayField extends StringField
         $this->cssStyle = $cssStyle;
 
         return $this;
+    }
+
+    /**
+     * @param  bool  $isClientValidator
+     * @return array
+     * @throws EmptyFieldNameException
+     */
+    public function getFormField(bool $isClientValidator = false): array
+    {
+        $result = parent::getFormField($isClientValidator);
+        $result['style'] = $this->getCssStyle();
+
+        return $result;
     }
 }
