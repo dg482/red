@@ -41,15 +41,27 @@ class TestUser implements Model
     public function create(array $request): Model
     {
         list($this->id, $this->email, $this->name) = $request;
+
         return $this;
     }
 
     /**
-     *
      * @return string[]
      */
     public function getFillable()
     {
         return ['email', 'name'];
+    }
+
+    /**
+     * @param  array  $attributes
+     * @param  array  $options
+     * @return Model
+     */
+    public function storeModel(array $attributes, array $options = []): Model
+    {
+        $this->create($attributes);
+
+        return $this;
     }
 }

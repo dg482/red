@@ -19,6 +19,14 @@ interface Model
     public function updateModel(array $attributes, array $options = []): bool;
 
     /**
+     * Обертка над методом сохранения новой модели
+     * @param  array  $attributes
+     * @param  array  $options
+     * @return Model
+     */
+    public function storeModel(array $attributes, array $options = []): Model;
+
+    /**
      * Массив полей автозаполнения
      * @return array
      */
