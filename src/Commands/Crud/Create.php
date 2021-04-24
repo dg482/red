@@ -8,7 +8,6 @@ namespace Dg482\Red\Commands\Crud;
  */
 class Create extends Update
 {
-
     /**
      * @return bool
      */
@@ -24,9 +23,13 @@ class Create extends Update
         }, $model->getFillable());
 
         if (false === empty($insert)) {
-            $model = $model->create($insert);
+            $model = $model->storeModel($insert);
 
-            return $model->id > 0;
+            if ($model->id > 0) {
+                $this->setModel($model);
+
+                return true;
+            }
         }
 
         return false;
