@@ -566,10 +566,11 @@ class Resource
     }
 
     /**
+     * @param  bool  $validatorsClient
      * @return array
-     * @throws Exception
+     * @throws EmptyFieldNameException
      */
-    public function getForm(): array
+    public function getForm(bool $validatorsClient = true): array
     {
         $adapter = $this->getAdapter();
         $arModel = $adapter->read(1);
@@ -589,7 +590,7 @@ class Resource
             }, $this->formModel->getActions()),
             'values' => $this->getValues(),
             // merge resource and form validators
-            'validator' => $this->validatorsClient,
+            'validator' => ($validatorsClient) ? $this->validatorsClient : $this->validators,
             'context' => $this->getContext(),
         ];
     }
