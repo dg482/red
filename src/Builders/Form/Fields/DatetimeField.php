@@ -8,7 +8,7 @@ use Carbon\Carbon;
  * Class Datetime
  * @package Dg482\Red\Builders\Form\Fields
  */
-class Datetime extends StringField
+class DatetimeField extends StringField
 {
     /** @var string */
     const FIELD_TYPE = 'datetime';
