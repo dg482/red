@@ -8,7 +8,7 @@ use Carbon\Carbon;
  * Class Date
  * @package App\Admin\Builder\Form\Fields
  */
-class DateField extends Datetime
+class DateField extends DatetimeField
 {
     /** @var string */
     const FIELD_TYPE = 'date';

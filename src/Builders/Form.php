@@ -4,12 +4,19 @@ namespace Dg482\Red\Builders;
 
 use Dg482\Red\Adapters\Adapter;
 use Dg482\Red\Builders\Form\Fields\BigintField;
+use Dg482\Red\Builders\Form\Fields\DateField;
+use Dg482\Red\Builders\Form\Fields\DatetimeField;
+use Dg482\Red\Builders\Form\Fields\DisplayField;
+use Dg482\Red\Builders\Form\Fields\FileField;
 use Dg482\Red\Builders\Form\Fields\FloatField;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Fields\IntegerField;
+use Dg482\Red\Builders\Form\Fields\PasswordField;
 use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\SmallintField;
 use Dg482\Red\Builders\Form\Fields\StringField;
+use Dg482\Red\Builders\Form\Fields\SwitchField;
+use Dg482\Red\Builders\Form\Fields\TableField;
 use Dg482\Red\Model;
 
 /**
@@ -66,6 +73,17 @@ class Form
             BigintField::getType(),
             SmallintField::getType(),
             FloatField::getType(),
+
+            DatetimeField::getType(),
+            DateField::getType(),
+
+            PasswordField::getType(),
+            SwitchField::getType(),
+            DisplayField::getType(),
+
+            FileField::getType(),
+
+            TableField::getType(),
         ];
     }
 }
