@@ -484,7 +484,7 @@ class Resource
 
         $this->fields = array_map(function (Field $field) use ($validators, $error_message) {
 
-            $method = 'formField'.ucfirst($field->getField());
+            $method = 'formField'.str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $field->getField())));
             $key = $field->getField();
 
             if (method_exists($this->formModel, $method)) {
