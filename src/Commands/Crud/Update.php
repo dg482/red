@@ -48,7 +48,7 @@ class Update extends Command implements CommandInterfaces
             }
         }
 
-        return false;
+        return $update;
     }
 
     /**

@@ -17,6 +17,7 @@ use Dg482\Red\Builders\Form\Fields\SmallintField;
 use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Builders\Form\Fields\SwitchField;
 use Dg482\Red\Builders\Form\Fields\TableField;
+use Dg482\Red\Builders\Form\Fields\TextField;
 use Dg482\Red\Model;
 
 /**
@@ -66,6 +67,7 @@ class Form
     {
         return [
             StringField::getType(),
+            TextField::getType(),
             SelectField::getType(),
             HiddenField::getType(),
 
