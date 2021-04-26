@@ -17,7 +17,11 @@ abstract class Field
 {
     use ValidatorsTrait, AttributeTrait, TranslateTrait;
 
+    /** @var string */
     protected const FIELD_TYPE = '';
+
+    /** @var string */
+    protected const FIELD_VALIDATE_TYPE = 'any';
 
     /** @var int $id */
     public int $id = 0;
@@ -308,5 +312,13 @@ abstract class Field
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFieldValidateType(): string
+    {
+        return self::FIELD_VALIDATE_TYPE;
     }
 }
