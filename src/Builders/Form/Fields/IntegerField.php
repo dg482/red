@@ -17,6 +17,9 @@ class IntegerField extends Field
     /** @var string */
     protected const FIELD_TYPE = 'integer';
 
+    /** @var string */
+    protected const FIELD_VALIDATE_TYPE = 'integer';
+
     /**
      * IntegerField constructor.
      * @param  bool  $isMultiple

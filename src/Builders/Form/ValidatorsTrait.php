@@ -117,7 +117,7 @@ trait ValidatorsTrait
             'rule' => $rule,
             'trigger' => $this->trigger,
             'message' => $message ?? '',
-            'type' => ($this->isMultiple()) ? 'array' : $this->getFieldType(),
+            'type' => ($this->isMultiple()) ? 'array' : $this->getFieldValidateType()
         ];
 
         $this->initRule($rule, $this->getName(), $resultRule);

@@ -11,6 +11,9 @@ class FloatField extends IntegerField
     /** @var string */
     protected const FIELD_TYPE = 'float';
 
+    /** @var string */
+    protected const FIELD_VALIDATE_TYPE = 'float';
+
     /**
      * IntegerField constructor.
      * @param  bool  $isMultiple

@@ -11,7 +11,11 @@ use Dg482\Red\Builders\Form\Fields\Values\StringValue;
  */
 class StringField extends Field
 {
+    /** @var string  */
     protected const FIELD_TYPE = 'string';
+
+    /** @var string */
+    protected const FIELD_VALIDATE_TYPE = 'string';
 
     /** @var StringValue|FieldValues */
     protected $value;
