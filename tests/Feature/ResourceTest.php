@@ -4,6 +4,8 @@ namespace Dg482\Red\Tests\Feature;
 
 use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form\BaseForms;
+use Dg482\Red\Commands\Crud\Delete;
+use Dg482\Red\Commands\Crud\Update;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
