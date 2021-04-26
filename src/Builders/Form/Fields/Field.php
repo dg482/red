@@ -319,6 +319,6 @@ abstract class Field
      */
     public function getFieldValidateType(): string
     {
-        return self::FIELD_VALIDATE_TYPE;
+        return static::FIELD_VALIDATE_TYPE;
     }
 }
