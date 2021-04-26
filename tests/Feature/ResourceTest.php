@@ -70,7 +70,7 @@ class ResourceTest extends TestCase
 
         $this->assertEquals('Test Users', $arResource['title']);
         $this->assertEquals('users', $resource->getIcon());
-        $this->assertCount(5, $arResource['columns']);
+        $this->assertCount(4, $arResource['columns']);
         $this->assertCount(1, $arResource['actions']);
         $this->assertCount(4, $arResource['data']);
 

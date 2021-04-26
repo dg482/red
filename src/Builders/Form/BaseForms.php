@@ -3,6 +3,9 @@
 namespace Dg482\Red\Builders\Form;
 
 use Dg482\Red\Builders\Form\Buttons\Button;
+use Dg482\Red\Builders\Form\Fields\Field;
+use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Exception;
@@ -183,5 +186,19 @@ class BaseForms implements FormModelInterface
     public function resourceFields(): array
     {
         return $this->fields();
+    }
+
+    /**
+     * @param  Field  $field
+     * @return Field
+     * @throws EmptyFieldNameException
+     */
+    public function formFieldId(Field $field): Field
+    {
+        return (new HiddenField)
+            ->setField($field->getField())
+            ->setValue($field->getValue()->getValue())
+            ->hideTable()
+            ->hideForm();
     }
 }
