@@ -2,6 +2,8 @@
 
 namespace Dg482\Red\Builders\Form\Fields;
 
+use Dg482\Red\Exceptions\EmptyFieldNameException;
+
 /**
  * Class TableField
  * @package Dg482\Red\Builders\Form\Fields
@@ -33,5 +35,25 @@ class TableField extends Field
         $this->value = $value;
 
         return $this;
+    }
+
+    /**
+     * Массив параметров поля для отрисовки в UI
+     * @param  bool  $isClientValidator
+     * @return array
+     * @throws EmptyFieldNameException
+     */
+    public function getFormField(bool $isClientValidator = false): array
+    {
+        return [
+            'id' => empty($this->id) ? time() + rand(1, 99999) : $this->id,
+            'name' => $this->getName(),
+            'type' => $this->getFieldType(),
+            'field' => $this->getField(),
+            'disabled' => $this->isDisabled(),
+            'attributes' => $this->getAttributes(),
+            'validators' => [],
+            'value' => $this->getValue(),
+        ];
     }
 }
