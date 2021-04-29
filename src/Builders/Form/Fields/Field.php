@@ -3,6 +3,7 @@
 namespace Dg482\Red\Builders\Form\Fields;
 
 use Dg482\Red\Builders\Form\AttributeTrait;
+use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 use Dg482\Red\Builders\Form\ValidatorsTrait;
@@ -69,12 +70,12 @@ abstract class Field
             'value' => (!$this->isMultiple()) ? [
                 'id' => $value->getId(),
                 'value' => $value->getValue(),
-            ] : array_map(function (FieldValues $value) {
+            ] : array_map(function (FieldValue $value) {
                 return [
                     'id' => $value->getId(),
                     'value' => $value->getValue(),
                 ];
-            }, $value),
+            }, $value->getValues()),
         ];
     }
 

@@ -96,6 +96,7 @@ class SwitchField extends SelectField
         $result = parent::getFormField($isClientValidator);
 
         $result['value'] = !empty($result['value']);
+        $result['action'] = $this->getAction();
 
         return $result;
     }
