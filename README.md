@@ -22,7 +22,7 @@
 
 ###### Схема выполнения запроса к БД через команду адаптера
 
-<p style="text-align: center">
+<p style="text-align: center" align="center">
 <img src="/assets/ResourceDiagram.png" />
 </p>
 
