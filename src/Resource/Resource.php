@@ -486,7 +486,7 @@ class Resource
 
         $this->fields = array_map(function (Field $field) use ($validators, $error_message) {
 
-            $method = 'formField'.str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $field->getField())));
+            $method = 'formField'.$this->getFieldMethodName($field->getField());
             $key = $field->getField();
 
             if (method_exists($this->formModel, $method)) {
@@ -519,6 +519,36 @@ class Resource
         }, $fields);
 
         return $this->fields;
+    }
+
+    public function storeFields(): array
+    {
+
+        // 1.1 init Field
+        $fields = $this->adapter->getTableColumns($this->model, $this->hidden_fields);
+
+        // 1.3 build Fields list
+        $fields = array_map(function (array $columnMeta) {
+            $id = $columnMeta['id'] ?? null;
+
+            if (in_array($id, $this->hidden_fields)) {
+                $columnMeta['type'] = HiddenField::getType();
+            }
+
+            $field = $this->adapter->getTableField($columnMeta);
+            $field->setField($id);
+
+            return $field;
+        }, $fields);
+    }
+
+    /**
+     * @param  string  $name
+     * @return string
+     */
+    private function getFieldMethodName(string $name): string
+    {
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $name)));
     }
 
     /**
