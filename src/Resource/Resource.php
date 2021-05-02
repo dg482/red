@@ -156,7 +156,7 @@ class Resource
 
     /**
      * Resource constructor.
-     * @param  Adapter  $adapter
+     * @param Adapter $adapter
      */
     public function __construct(Adapter $adapter)
     {
@@ -187,7 +187,7 @@ class Resource
     }
 
     /**
-     * @param  AdapterInterfaces  $adapter
+     * @param AdapterInterfaces $adapter
      */
     public function setAdapter(AdapterInterfaces $adapter): void
     {
@@ -210,7 +210,7 @@ class Resource
     }
 
     /**
-     * @param  Field  $field
+     * @param Field $field
      * @throws EmptyFieldNameException
      */
     private function itemValue(Field $field)
@@ -238,7 +238,7 @@ class Resource
     }
 
     /**
-     * @param  Field  $field
+     * @param Field $field
      * @return bool
      */
     private function isBoolValueField(Field $field): bool
@@ -255,7 +255,7 @@ class Resource
     }
 
     /**
-     * @param  Model  $model
+     * @param Model $model
      * @return Resource
      */
     public function setModel(Model $model): Resource
@@ -274,7 +274,7 @@ class Resource
     }
 
     /**
-     * @param  null  $relation
+     * @param null $relation
      * @return Resource
      */
     public function setRelation($relation): Resource
@@ -293,7 +293,7 @@ class Resource
     }
 
     /**
-     * @param  array  $hidden_fields
+     * @param array $hidden_fields
      * @return Resource
      */
     public function setHiddenFields(array $hidden_fields): Resource
@@ -312,7 +312,7 @@ class Resource
     }
 
     /**
-     * @param  array  $labels
+     * @param array $labels
      * @return Resource
      */
     public function setLabels(array $labels): Resource
@@ -353,7 +353,7 @@ class Resource
     }
 
     /**
-     * @param  array  $actions
+     * @param array $actions
      * @return Resource
      */
     public function setActions(array $actions): Resource
@@ -372,7 +372,7 @@ class Resource
     }
 
     /**
-     * @param  string[]  $rowActions
+     * @param string[] $rowActions
      * @return Resource
      */
     public function setRowActions(array $rowActions): Resource
@@ -391,7 +391,7 @@ class Resource
     }
 
     /**
-     * @param  string  $title
+     * @param string $title
      * @return Resource
      */
     public function setTitle(string $title): Resource
@@ -410,7 +410,7 @@ class Resource
     }
 
     /**
-     * @param  array  $relations
+     * @param array $relations
      * @return Resource
      */
     public function setRelations(array $relations): Resource
@@ -429,7 +429,7 @@ class Resource
     }
 
     /**
-     * @param  string  $context
+     * @param string $context
      * @return Resource
      */
     public function setContext(string $context): Resource
@@ -440,7 +440,7 @@ class Resource
     }
 
     /**
-     * @param  string  $context
+     * @param string $context
      * @return Resource
      */
     public function initResource(string $context = ''): Resource
@@ -486,7 +486,7 @@ class Resource
 
         $this->fields = array_map(function (Field $field) use ($validators, $error_message) {
 
-            $method = 'formField'.$this->getFieldMethodName($field->getField());
+            $method = 'formField' . $this->getFieldMethodName($field->getField());
             $key = $field->getField();
 
             if (method_exists($this->formModel, $method)) {
@@ -498,7 +498,7 @@ class Resource
             }
 
             if ($this->getRelation()) {
-                $field->setField(get_class($this->getRelation()).'|'.$key);  //set relation name
+                $field->setField(get_class($this->getRelation()) . '|' . $key);  //set relation name
             }
 
             if (isset($validators[$key])) {
@@ -543,7 +543,7 @@ class Resource
     }
 
     /**
-     * @param  string  $name
+     * @param string $name
      * @return string
      */
     private function getFieldMethodName(string $name): string
@@ -552,7 +552,7 @@ class Resource
     }
 
     /**
-     * @param  BaseForms  $form
+     * @param BaseForms $form
      * @return Resource
      */
     public function setForm(BaseForms $form): Resource
@@ -587,7 +587,7 @@ class Resource
     }
 
     /**
-     * @param  string  $icon
+     * @param string $icon
      * @return Resource
      */
     public function setIcon(string $icon): Resource
@@ -598,7 +598,7 @@ class Resource
     }
 
     /**
-     * @param  bool  $validatorsClient
+     * @param bool $validatorsClient
      * @return array
      * @throws EmptyFieldNameException
      */
@@ -625,5 +625,47 @@ class Resource
             'validator' => ($validatorsClient) ? $this->validatorsClient : $this->validators,
             'context' => $this->getContext(),
         ];
+    }
+
+    /**
+     * @param Field $field
+     * @param array $fields
+     */
+    private function extractFields(Field $field, array &$fields = []): void
+    {
+        if ($field instanceof BaseStructure) {
+            array_map(function (Field $field) use ($fields) {
+                $this->extractFields($field, $fields);
+            }, $field->getItems());
+        } else {
+            $fields[] = $field;
+        }
+    }
+
+    /**
+     * @param array $request
+     * @return array
+     * @throws EmptyFieldNameException
+     */
+    public function getFieldsValue(array $request): array
+    {
+        $adapter = $this->getAdapter();
+        $fields = [];
+
+        array_map(function (Field $field) use ($fields) {
+            $this->extractFields($field);
+        }, $this->formModel->resourceFields());
+
+        array_map(function (Field $field) use (&$request) {
+            $method = 'saveField' . $this->getFieldMethodName($field->getName());
+            if (method_exists($this->formModel, $method)) {
+                $value = $this->formModel->{$method}($field, $request[$field->getField()]);
+                if (!empty($value) && $value instanceof FieldValue) {
+                    $request[$field->getField()] = $value->getValue();
+                }
+            }
+        }, $fields);
+
+        return $request;
     }
 }

@@ -44,6 +44,9 @@ abstract class BaseButton
     /** @var bool */
     public bool $load = false;
 
+    /** @var string */
+    private string $command = '';
+
     /**
      * @return string
      */
@@ -53,7 +56,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param  string  $text
+     * @param string $text
      * @return BaseButton
      */
     public function setText(string $text): BaseButton
@@ -72,7 +75,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param  string  $icon
+     * @param string $icon
      * @return BaseButton
      */
     public function setIcon(string $icon): BaseButton
@@ -93,7 +96,7 @@ abstract class BaseButton
     /**
      * can be set to circle, round or omitted
      *
-     * @param  string  $shape
+     * @param string $shape
      * @return BaseButton
      */
     public function setShape(string $shape): BaseButton
@@ -112,7 +115,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param  string  $type
+     * @param string $type
      * @return BaseButton
      */
     public function setType(string $type): BaseButton
@@ -131,7 +134,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param  bool  $block
+     * @param bool $block
      * @return BaseButton
      */
     public function setBlock(bool $block): BaseButton
@@ -150,7 +153,7 @@ abstract class BaseButton
     }
 
     /**
-     * @param  string  $action
+     * @param string $action
      * @return BaseButton
      */
     public function setAction(string $action): BaseButton
@@ -169,13 +172,31 @@ abstract class BaseButton
     }
 
     /**
-     * @param  bool  $load
+     * @param bool $load
      * @return BaseButton
      */
     public function setLoad(bool $load): BaseButton
     {
         $this->load = $load;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommand(): string
+    {
+        return $this->command;
+    }
+
+    /**
+     * @param string $command
+     * @return BaseButton
+     */
+    public function setCommand(string $command): BaseButton
+    {
+        $this->command = $command;
         return $this;
     }
 

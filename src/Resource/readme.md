@@ -74,3 +74,20 @@ class Identity extends BaseForms implements FormModelInterface
 
 
 ```
+
+Обработка значений поля перед сохранением производится за счет метода содержащим в первой части префикс `saveField`
+и суффикс имя поля в верхнем регистре, пример имени метода для поля пароль: `saveFieldPassword`.
+
+```php
+
+    /**
+     * @param Field $password
+     * @param $value
+     * @return StringValue
+     */
+    public function safeFieldPassword(Field $password, $value): StringValue
+    {
+        return new StringValue(0, Hash::make($value));
+    }
+
+```
