@@ -175,6 +175,7 @@ class FormTest extends TestCase
             (new Button)
                 ->make('Download DOC')
                 ->setAction('download_doc')
+                ->setCommand(TestCommand::class)
                 ->setBlock(true)
                 ->setShape('rounded')
                 ->setType('default')
