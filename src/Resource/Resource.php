@@ -11,6 +11,7 @@ use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Fields\SwitchField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
+use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
 use Dg482\Red\Builders\TableTrait;
 use Dg482\Red\Commands\Crud\Command;
@@ -225,8 +226,14 @@ class Resource
         } else {
             $idx = $field->getField();
             if (empty($this->values[$idx])) {
-                $this->values[$idx] = ($field->getValue() instanceof FieldValue) ?
-                    $field->getValue()->getValue() : $field->getValue();
+                if ($field->isMultiple() && $field->getValue() instanceof FieldValues) {
+                    $this->values[$idx] = array_filter($field->getValue()->getValues(), function (FieldValue $value) {
+                        return empty($value->getValue());
+                    });
+                } else {
+                    $this->values[$idx] = $field->getValue()->getValue();
+                }
+
                 if ($this->isBoolValueField($field)) {
                     $this->values[$idx] = !empty($this->values[$idx]);
                 }
