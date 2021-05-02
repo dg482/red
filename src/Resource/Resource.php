@@ -84,10 +84,16 @@ class Resource
     protected ?Model $relation = null;
 
     /**
-     * Список доступных отношений, ссылки на RelationResource
+     * Список доступных отношений, ссылки на Resource
      * @var array
      */
     protected array $relations = [];
+
+    /**
+     * Список экземпляров отношений в контексте ресурса
+     * @var array
+     */
+    protected array $relationInstance = [];
 
     /**
      * Модель формы
