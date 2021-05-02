@@ -13,7 +13,10 @@ use Dg482\Red\Builders\Form\Fields\SwitchField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Structure\BaseStructure;
 use Dg482\Red\Builders\TableTrait;
+use Dg482\Red\Commands\Crud\Command;
+use Dg482\Red\Commands\Crud\Create;
 use Dg482\Red\Commands\Crud\Read;
+use Dg482\Red\Commands\Crud\Update;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\Create as ActionCreate;
@@ -169,7 +172,7 @@ class Resource
 
         $this->setAdapter($adapter); // set db adapter
 
-        $form = $this->getFormModel();// init and set form
+        $this->getFormModel();// init and set form
 
         $this->initResource(__CLASS__);
     }
@@ -521,27 +524,6 @@ class Resource
         return $this->fields;
     }
 
-    public function storeFields(): array
-    {
-
-        // 1.1 init Field
-        $fields = $this->adapter->getTableColumns($this->model, $this->hidden_fields);
-
-        // 1.3 build Fields list
-        $fields = array_map(function (array $columnMeta) {
-            $id = $columnMeta['id'] ?? null;
-
-            if (in_array($id, $this->hidden_fields)) {
-                $columnMeta['type'] = HiddenField::getType();
-            }
-
-            $field = $this->adapter->getTableField($columnMeta);
-            $field->setField($id);
-
-            return $field;
-        }, $fields);
-    }
-
     /**
      * @param string $name
      * @return string
@@ -604,8 +586,7 @@ class Resource
      */
     public function getForm(bool $validatorsClient = true): array
     {
-        $adapter = $this->getAdapter();
-        $arModel = $adapter->read(1);
+        $this->getAdapter()->read(1);
 
         $items = array_map(function (Field $field) {
             $this->itemValue($field);
@@ -649,7 +630,6 @@ class Resource
      */
     public function getFieldsValue(array $request): array
     {
-        $adapter = $this->getAdapter();
         $fields = [];
 
         array_map(function (Field $field) use (&$fields) {
@@ -667,5 +647,34 @@ class Resource
         }, $fields);
 
         return $request;
+    }
+
+    /**
+     * @param array $request
+     * @return Command|null
+     */
+    public function getActionCommand(array $request): Command
+    {
+        if (!empty($request['action'])) {
+            /** @var Button $button */
+            $button = current(array_filter(
+                $this->getFormModel()->getActions(),
+                function (Button $button) use ($request) {
+                    return $button->getAction() === $request['action'];
+                }
+            ));
+            if (!empty($button)) {
+                $command = $button->getCommand();
+                if (class_exists($command)) {
+                    return (new $command);
+                }
+            }
+        }
+
+        if (empty($request['id'])) {
+            return (new Create);
+        }
+
+        return (new Update);
     }
 }
