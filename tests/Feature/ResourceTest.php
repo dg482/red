@@ -4,7 +4,8 @@ namespace Dg482\Red\Tests\Feature;
 
 use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form\BaseForms;
-use Dg482\Red\Builders\Form\Fields\Values\StringValue;
+use Dg482\Red\Commands\Crud\Create;
+use Dg482\Red\Commands\Crud\Update;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
@@ -108,5 +109,15 @@ class ResourceTest extends TestCase
         $request = $resource->getFieldsValue($request);
 
         $this->assertEquals('test@extra.com', $request['email']);
+
+        $command = $resource->getActionCommand($request);
+
+        $this->assertInstanceOf(Update::class, $command);
+
+        unset($request['id']);
+
+        $command = $resource->getActionCommand($request);
+
+        $this->assertInstanceOf(Create::class, $command);
     }
 }
