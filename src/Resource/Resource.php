@@ -652,12 +652,12 @@ class Resource
         $adapter = $this->getAdapter();
         $fields = [];
 
-        array_map(function (Field $field) use ($fields) {
-            $this->extractFields($field);
+        array_map(function (Field $field) use (&$fields) {
+            $this->extractFields($field, $fields);
         }, $this->formModel->resourceFields());
 
         array_map(function (Field $field) use (&$request) {
-            $method = 'saveField' . $this->getFieldMethodName($field->getName());
+            $method = 'saveField' . $this->getFieldMethodName($field->getField());
             if (method_exists($this->formModel, $method)) {
                 $value = $this->formModel->{$method}($field, $request[$field->getField()]);
                 if (!empty($value) && $value instanceof FieldValue) {

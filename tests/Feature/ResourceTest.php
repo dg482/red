@@ -4,8 +4,7 @@ namespace Dg482\Red\Tests\Feature;
 
 use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form\BaseForms;
-use Dg482\Red\Commands\Crud\Delete;
-use Dg482\Red\Commands\Crud\Update;
+use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
@@ -79,5 +78,35 @@ class ResourceTest extends TestCase
 
         $this->assertEquals('user_edit', $arForm['form']);
         $this->assertEquals('Edit test user', $arForm['title']);
+    }
+
+    public function testSaveResource()
+    {
+        $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
+        $adapter->setTableColumns([
+            ['id' => 'id', 'type' => 'int', 'table' => 'test'],
+            ['id' => 'email', 'type' => 'string', 'table' => 'test'],
+            ['id' => 'name', 'type' => 'string', 'table' => 'test'],
+        ]);
+
+        $model = $this->createMock(Model::class);
+
+        /** @var  BaseForms::class $baseForm */
+        $baseForm = new TestUserForm();
+
+
+        // 1 configure form
+        $baseForm->setModel($model)
+            ->setFormName('user_edit');
+
+        // 2.1 create resource, set default adapter
+        $resource = new TestUserResource($adapter);
+        $resource->setModel($model);
+
+        $request = ['id' => 1, 'email' => 'test@mail.com'];
+
+        $request = $resource->getFieldsValue($request);
+
+        $this->assertEquals('test@extra.com', $request['email']);
     }
 }
