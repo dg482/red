@@ -29,23 +29,7 @@ class Update extends Command implements CommandInterfaces
         $request = $this->getData();
 
         if ($update = $model->updateModel($this->getData())) {
-            foreach ($this->getRelations() as $id => $instance) {
-                /** @var Model $relationModel */
-                $relationModel = $model->{$id};
-                if ($relationModel instanceof Model) {
-                    $updateRelationRequest = [];
-
-                    array_map(function ($field) use (&$updateRelationRequest, $id, $request) {
-                        if (isset($request[$id.'|'.$field])) {
-                            $updateRelationRequest[$field] = $request[$id.'|'.$field];
-                        }
-                    }, $relationModel->getFillable());
-
-                    if (false === empty($updateRelationRequest)) {
-                        $relationModel->updateModel($updateRelationRequest);
-                    }
-                }
-            }
+            $this->setModel($model);
         }
 
         return $update;
@@ -60,7 +44,7 @@ class Update extends Command implements CommandInterfaces
     }
 
     /**
-     * @param  Model  $model
+     * @param Model $model
      * @return Update
      */
     public function setModel(Model $model): Update
@@ -79,7 +63,7 @@ class Update extends Command implements CommandInterfaces
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      * @return Update
      */
     public function setData(array $data): Update
@@ -98,7 +82,7 @@ class Update extends Command implements CommandInterfaces
     }
 
     /**
-     * @param  array  $relations
+     * @param array $relations
      * @return Update
      */
     public function setRelations(array $relations): Update

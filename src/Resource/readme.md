@@ -85,9 +85,9 @@ class Identity extends BaseForms implements FormModelInterface
      * @param $value
      * @return StringValue
      */
-    public function safeFieldPassword(Field $password, $value): StringValue
+    public function safeFieldPassword(Field $password, array $request): StringValue
     {
-        return new StringValue(0, Hash::make($value));
+        return new StringValue(0, Hash::make($request[$password->getField()]));
     }
 
 ```
