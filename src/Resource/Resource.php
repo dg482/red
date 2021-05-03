@@ -652,7 +652,7 @@ class Resource
         array_map(function (Field $field) use (&$request) {
             $method = 'saveField' . $this->getFieldMethodName($field->getField());
             if (method_exists($this->formModel, $method)) {
-                $value = $this->formModel->{$method}($field, $request[$field->getField()]);
+                $value = $this->formModel->{$method}($field, $request);
                 if (!empty($value) && $value instanceof FieldValue) {
                     $request[$field->getField()] = $value->getValue();
                 }
