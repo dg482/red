@@ -690,4 +690,22 @@ class Resource
 
         return (new Update);
     }
+
+    /**
+     * @param string $relation
+     * @param Resource $resource
+     */
+    public function setRelationInstance(string $relation, Resource $resource): void
+    {
+        $this->relationInstance[$relation] = $resource;
+    }
+
+    /**
+     * @param string $relation
+     * @return Resource|null
+     */
+    public function getRelationInstance(string $relation): ?Resource
+    {
+        return $this->relationInstance[$relation] ?? null;
+    }
 }
