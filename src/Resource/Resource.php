@@ -593,9 +593,10 @@ class Resource
     }
 
     /**
-     * @param bool $validatorsClient
+     * @param  bool  $validatorsClient
      * @return array
      * @throws EmptyFieldNameException
+     * @throws Exception
      */
     public function getForm(bool $validatorsClient = true): array
     {
