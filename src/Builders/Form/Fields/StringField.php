@@ -11,7 +11,7 @@ use Dg482\Red\Builders\Form\Fields\Values\StringValue;
  */
 class StringField extends Field
 {
-    /** @var string  */
+    /** @var string */
     protected const FIELD_TYPE = 'string';
 
     /** @var string */
@@ -38,7 +38,11 @@ class StringField extends Field
      */
     public function setValue(string $value = ''): Field
     {
-        $this->value->setValue($value);
+        if ($this->isMultiple()) {
+            $this->value->push(new StringValue(0, $value));
+        } else {
+            $this->value->setValue($value);
+        }
 
         return $this;
     }
