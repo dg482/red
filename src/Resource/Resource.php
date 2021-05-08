@@ -234,7 +234,10 @@ class Resource
             if (empty($this->values[$idx])) {
                 if ($field->isMultiple() && $field->getValue() instanceof FieldValues) {
                     array_map(function (FieldValue $value) use ($idx) {
-                        $this->values[$idx] [] = $value->getValue();
+                        $this->values[$idx][] = [
+                            'id' => $value->getId(),
+                            'value' => $value->getValue(),
+                        ];
                     }, array_filter($field->getValue()->getValues(), function (FieldValue $value) {
                         return !empty($value->getValue());
                     }));
