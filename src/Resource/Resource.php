@@ -234,7 +234,7 @@ class Resource
             if (empty($this->values[$idx])) {
                 if ($field->isMultiple() && $field->getValue() instanceof FieldValues) {
                     $this->values[$idx] = array_filter($field->getValue()->getValues(), function (FieldValue $value) {
-                        return empty($value->getValue());
+                        return !empty($value->getValue());
                     });
                 } else {
                     $this->values[$idx] = $field->getValue()->getValue();
@@ -517,10 +517,6 @@ class Resource
                 //$newField->setAttributes($field->getAttributes());
             }
 
-            if ($this->getRelation()) {
-                $field->setField(get_class($this->getRelation()) . '|' . $key);  //set relation name
-            }
-
             if (isset($validators[$key])) {
                 array_map(function (string $rule) use (&$field, $error_message, $key) {
                     $idx = current(explode(':', $rule));
@@ -533,7 +529,8 @@ class Resource
             }
 
             $this->validatorsClient[$field->getField()] = $field->getValidatorsClient();
-            $this->values[$field->getField()] = $field->getValue()->getValue();// set values to global object
+            $this->values[$field->getField()] = (!$field->isMultiple()) ?
+                $field->getValue()->getValue() : $field->getValue()->getValues();// set values to global object
 
             return $field;
         }, $fields);
@@ -639,11 +636,6 @@ class Resource
         }
     }
 
-    /**
-     * @param array $request
-     * @return array
-     * @throws EmptyFieldNameException
-     */
     public function getFieldsValue(array $request): array
     {
         $fields = [];
@@ -653,7 +645,12 @@ class Resource
         }, $this->formModel->resourceFields());
 
         array_map(function (Field $field) use (&$request) {
-            $method = 'saveField' . $this->getFieldMethodName($field->getField());
+            $name = $field->getField();
+            $relationSeparator = strpos($name, '@');
+            if ($relationSeparator !== false) {
+                $name = substr($name, -$relationSeparator);// clear name Field
+            }
+            $method = 'saveField'.$this->getFieldMethodName($name);
             if (method_exists($this->formModel, $method)) {
                 $value = $this->formModel->{$method}($field, $request);
                 if (!empty($value) && $value instanceof FieldValue) {
@@ -664,7 +661,6 @@ class Resource
 
         return $request;
     }
-
     /**
      * @param array $request
      * @return Command|null

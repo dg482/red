@@ -102,11 +102,13 @@ trait TableTrait
             $resultItems = ['id' => $item->id];
             array_map(function (Field $field) use ($item, &$resultItems) {
                 $id = $field->getField();
-                if (strpos($id, '|') !== false) {
-                    $id = explode('|', $id);
-                    $id = end($id);
-                    $field->setValue($item->{$id} ?? '');
-                    $resultItems[$id] = $field->getValue();
+                $relationSeparator = (!$this instanceof RelationResource) ? strpos($id, '@') : false;
+                if ($relationSeparator !== false) {
+                    $id = substr($id, -$relationSeparator);// clear name Field
+                    if ($item->{$id}) {
+                        $field->setValue($item->{$id} ?? '');
+                        $resultItems[$id] = $field->getValue();
+                    }
                 } else {
                     $field->setValue($item->{$id} ?? '');
                     $resultItems[$id] = $field->isMultiple() ? $field->getValue()->getValues() :
