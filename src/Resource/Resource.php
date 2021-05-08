@@ -234,7 +234,7 @@ class Resource
             if (empty($this->values[$idx])) {
                 if ($field->isMultiple() && $field->getValue() instanceof FieldValues) {
                     $this->values[$idx] = array_filter($field->getValue()->getValues(), function (FieldValue $value) {
-                        return empty($value->getValue());
+                        return !empty($value->getValue());
                     });
                 } else {
                     $this->values[$idx] = $field->getValue()->getValue();
