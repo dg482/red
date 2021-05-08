@@ -35,8 +35,7 @@ use Exception;
  * Для отображения ресурса в форме редактирования используются формы Dg482\Red\Builder\Form с
  * ссылкой на ресурс. Форма определяет методы для работы с полями, сохранение и обновление данных через CRUD команды.
  *
- * Отношения моделей (relations) определяются как самостоятельные ресурсы не имеющие свои формы унаследованные от
- * RelationsResource для HasMany и RelationResource для HasOne типа отношения.
+ * Отношения моделей (relations) определяются как самостоятельные ресурсы имеющие свои формы унаследованные от RelationResource.
  *
  * @package Dg482\Red\resource
  */
@@ -94,6 +93,12 @@ class Resource
      * @var array
      */
     protected array $relationInstance = [];
+
+    /**
+     * Определение хранилища файлов ресурса
+     * @var string $assets
+     */
+    protected string $assets = '';
 
     /**
      * Модель формы
@@ -729,6 +734,25 @@ class Resource
     public function setFields(array $fields): Resource
     {
         $this->fields = $fields;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssets(): string
+    {
+        return $this->assets;
+    }
+
+    /**
+     * @param  string  $assets
+     * @return Resource
+     */
+    public function setAssets(string $assets): Resource
+    {
+        $this->assets = $assets;
 
         return $this;
     }
