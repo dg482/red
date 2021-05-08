@@ -51,7 +51,7 @@ class Resource
     protected const PAGE_SIZE = 50;
 
     /** @var array */
-    private array $fields = [];
+    protected array $fields = [];
 
     /**
      * Адаптер для работы с БД
@@ -475,32 +475,36 @@ class Resource
         $validators = array_merge($this->formModel->getValidators(), $this->validators);
         $error_message = $this->formModel->getErrorMessages();
 
-        // 1.1 init Field
-        $fields = $this->adapter->getTableColumns($this->model, $this->hidden_fields);
+        if ($this->fields === []) {
+            // 1.1 init Field
+            $fields = $this->adapter->getTableColumns($this->model, $this->hidden_fields);
 
-        // 1.3 build Fields list
-        $fields = array_map(function (array $columnMeta) {
-            $id = $columnMeta['id'] ?? null;
+            // 1.3 build Fields list
+            $fields = array_map(function (array $columnMeta) {
+                $id = $columnMeta['id'] ?? null;
 
-            if (in_array($id, $this->hidden_fields)) {
-                $columnMeta['type'] = HiddenField::getType();
-            }
+                if (in_array($id, $this->hidden_fields)) {
+                    $columnMeta['type'] = HiddenField::getType();
+                }
 
-            $field = $this->adapter->getTableField($columnMeta);
-            $field->setField($id);
+                $field = $this->adapter->getTableField($columnMeta);
+                $field->setField($id);
 
-            if (isset($this->labels[$id])) {
-                $field->setName($this->labels[$id]);
-            }
+                if (isset($this->labels[$id])) {
+                    $field->setName($this->labels[$id]);
+                }
 
-            return $field;
-        }, $fields);
+                return $field;
+            }, $fields);
+        } else {
+            $fields = $this->fields;
+        }
 
         $fields = array_filter($fields, function (Field $field) {
             return $field->isShowForm();
         });
 
-        $this->fields = array_map(function (Field $field) use ($validators, $error_message) {
+        return array_map(function (Field $field) use ($validators, $error_message) {
 
             $method = 'formField' . $this->getFieldMethodName($field->getField());
             $key = $field->getField();
@@ -533,8 +537,6 @@ class Resource
 
             return $field;
         }, $fields);
-
-        return $this->fields;
     }
 
     /**
@@ -593,9 +595,10 @@ class Resource
     }
 
     /**
-     * @param bool $validatorsClient
+     * @param  bool  $validatorsClient
      * @return array
      * @throws EmptyFieldNameException
+     * @throws Exception
      */
     public function getForm(bool $validatorsClient = true): array
     {
@@ -707,5 +710,25 @@ class Resource
     public function getRelationInstance(string $relation): ?Resource
     {
         return $this->relationInstance[$relation] ?? null;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @param  array  $fields
+     * @return Resource
+     */
+    public function setFields(array $fields): Resource
+    {
+        $this->fields = $fields;
+
+        return $this;
     }
 }
