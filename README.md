@@ -30,64 +30,16 @@
 Ресурс должен содержать определение модели, правила проверки ввода данных, название полей с учетом локализации, 
 параметры, отвечающие за визуальное оформление пунктов меню.
 
+В методе `Resource::initResource()` определяются основные параметры:
+* `Resource::setTitle()` - заголовок в пункте меню, таблице элементов ресурса
+* `Resource::setTitle()` - иконка в пункте меню
+* `Resource::setLabels()` - подписи к полям в таблице и форме
+* `Resource::setHiddenFields()` - определение скрытых полей (**Внимание!** поля будут пропущены при сборке таблицы или формы, 
+  что бы присвоить полю тип `hidden` необходимо переопределить поле в форме ресурса)
+* `Resource::setAssets()` - метод определяет хранилище файлов, реализацию интерфейса `ResourceAssetsInterface` для работы с медиа материалами
+  (изображениями, файлами документации и тд) прикрепляемыми к модели ресурса. 
+
 Метод `Resource::getFormModel()` должен вернуть форму модели, расширяющую базовую реализацию `Dg482\Red\Builders\Form\BaseForms`
-
-###### Форма WebinarItemForm для ресурса WebinarResource
-
-```php
-namespace App\Resources\Webinar\Forms;
-
-use App\Models\Webinar;
-use Dg482\Red\Builders\Form\BaseForms;
-use Dg482\Red\Builders\Form\Fields\Field;
-use Dg482\Red\Builders\Form\Fields\HiddenField;
-
-/**
- * Class WebinarItemForm
- * @package App\Resources\Webinars\Forms
- */
-class WebinarItemForm extends BaseForms
-{
-    /**
-     * Category constructor.
-     * @param  Webinar  $model
-     */
-    public function __construct(Webinar $model)
-    {
-        $this->setTitle('Вебинар');// заголовок формы
-        $this->setFormName('webinar/item'); // идентификатор формы
-        $this->setModel($model); // определение модели в контексте формы
-    }
-
-    /**
-     * Переопределение поля url
-     * 
-     * @param  Field  $field
-     * @return Field
-     */
-    public function formFieldUrl(Field $field): Field
-    {
-        return $field->hideTable();// скрыть поле в таблице
-    }
-
-    /**
-     * Переопределение типа поля id
-     * @param  Field  $field
-     * @return Field
-     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
-     */
-    public function formFieldId(Field $field): Field
-    {
-        return (new HiddenField)
-            ->setField($field->getField())
-            ->setValue($field->getValue()->getValue())
-            ->hideTable();
-    }
-}
-
-```
-
-
 
 ###### Ресурс WebinarResource
 
@@ -105,10 +57,15 @@ use Dg482\Red\Resource\Resource;
  */
 class WebinarResource extends Resource
 {
-    /** @var string */
-    protected string $resourceModel = Webinar::class; // Определение модели
+    /** 
+     * Определение модели
+     * @var string 
+     */
+    protected string $resourceModel = Webinar::class;
 
     /**
+     * Метод инициализации параметров ресурса
+     * 
      * @param  string  $context
      * @return Resource
      */
@@ -126,16 +83,18 @@ class WebinarResource extends Resource
             ])
             ->setContext(__CLASS__);
             
-        // определение валидаторов
+        // определение правил проверки ввода с учетом интеграции с фреимворком, в данном случае правила для Laravel
         $this->validators = [
             'title' => ['required', 'max:80'],
         ];
 
+        $this->setAssets(new WebinarStorage);
+        
         return $this;
     }
 
     /**
-     * Return form model
+     * Метод возвращает форму ресурса в которой определены вспомогательные методы для работы с полями
      *
      * @return BaseForms
      */
@@ -150,5 +109,138 @@ class WebinarResource extends Resource
 }
 
 ```
+
+<details>
+  <summary><strong>Хранилище WebinarItemForm для ресурса WebinarResource</strong></summary>
+
+```php
+namespace App\Resources\Webinar\Assets;
+
+use App\Models\Files\Storage;
+use Dg482\Red\Interfaces\ResourceAssetsInterface;
+
+/**
+ * Class WebinarStorage
+ * 
+ * В контексте данного примера класс WebinarStorage расширяет Storage
+ * который является типовой реализацией работы с моделью БД для регистрации файлов. 
+ * От проекта к проекту данная реализация может отличаться поэтому 
+ * в качестве примера рассматриваются только методы интерфейса ResourceAssetsInterface.
+ * 
+ * @package App\Resources\Webinar\Assets
+ */
+class WebinarStorage extends Storage implements ResourceAssetsInterface
+{
+    /**
+     * Удаление файла
+     *
+     * @return bool
+     */
+    public function remove(): bool
+    {
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($this->{self::PATH});
+
+        return $this->delete();
+    }
+
+    /**
+     * Получение модели по идентификатору привязки к файлу
+     * @param  int  $id
+     * @return ResourceAssetsInterface
+     */
+    public function get(int $id): ResourceAssetsInterface
+    {
+        $item = $this->where([
+            Storage::OWNER_TYPE => Storage::TYPE_CATALOG,
+            'id' => $id,
+        ])->first();
+
+        return $item ?? new self();
+    }
+
+    /**
+     * Сохранение привязки загруженного файла
+     *
+     * @param  array  $parameter
+     * @return bool
+     */
+    public function store(array $parameter): bool
+    {
+        $item = self::create([
+            Storage::OWNER_TYPE => Storage::TYPE_CATALOG,
+            Storage::OWNER_ID => $parameter[Storage::OWNER_ID],
+            Storage::PATH => $parameter[Storage::PATH],
+            Storage::STORAGE => Storage::STORAGE_LOCAL,
+            Storage::FILE => $parameter[Storage::FILE] ?? $parameter[Storage::PATH],
+        ]);
+
+        return $item->id > 0 ?? false;
+    }
+}
+
+```
+</details>
+
+<details>
+  <summary><strong>Форма WebinarItemForm для ресурса WebinarResource</strong></summary>
+
+```php
+namespace App\Resources\Webinar\Forms;
+
+use App\Models\Webinar;
+use Dg482\Red\Builders\Form\BaseForms;
+use Dg482\Red\Builders\Form\Fields\Field;
+use Dg482\Red\Builders\Form\Fields\HiddenField;
+
+/**
+ * Определение формы для работы с моделью Webinar, содержит методы модификации полей по умолчанию
+ *
+ * @package App\Resources\Webinars\Forms
+ */
+class WebinarItemForm extends BaseForms
+{
+    /**
+     * Category constructor.
+     * @param  Webinar  $model
+     */
+     public function __construct(Webinar $model)
+     {
+        $this->setTitle('Вебинар');// заголовок формы
+        $this->setFormName('webinar/item'); // идентификатор формы
+        $this->setModel($model); // определение модели в контексте формы
+     }
+
+    /**
+     * Переопределение поля url
+     *
+     * @param  Field  $field
+     * @return Field
+     */
+     public function formFieldUrl(Field $field): Field
+     {
+        return $field->hideTable();// скрыть поле в таблице
+     }
+
+    /**
+     * Переопределение типа поля id
+     * @param  Field  $field
+     * @return Field
+     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
+     */
+     public function formFieldId(Field $field): Field
+     {
+        return (new HiddenField)
+                ->setField($field->getField())
+                ->setValue($field->getValue()->getValue())
+                ->hideTable();
+     }
+}
+
+```
+</details>
+
+
+
+
 
 Также ресурсы можно использовать как статичные генераторы произвольного интерфейса.
