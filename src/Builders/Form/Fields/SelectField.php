@@ -102,4 +102,23 @@ class SelectField extends StringField
 
         return $value;
     }
+
+    /**
+     * @param  bool  $isClientValidator
+     * @return array
+     * @throws EmptyFieldNameException
+     */
+    public function getFormField(bool $isClientValidator = false): array
+    {
+        $result = parent::getFormField($isClientValidator);
+
+        $result['variants'] = array_map(function (StringValue $value) {
+            return [
+                'id' => $value->getId(),
+                'value' => $value->getValue(),
+            ];
+        }, $this->variants);
+
+        return $result;
+    }
 }

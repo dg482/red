@@ -34,12 +34,13 @@ class StringField extends Field
 
     /**
      * @param  string  $value
+     * @param  int  $id
      * @return Field
      */
-    public function setValue(string $value = ''): Field
+    public function setValue(string $value = '', int $id = 0): Field
     {
         if ($this->isMultiple()) {
-            $this->value->push(new StringValue(0, $value));
+            $this->value->push(new StringValue($id, $value));
         } else {
             $this->value->setValue($value);
         }

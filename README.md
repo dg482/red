@@ -111,7 +111,7 @@ class WebinarResource extends Resource
 ```
 
 <details>
-  <summary><strong>Хранилище WebinarItemForm для ресурса WebinarResource</strong></summary>
+  <summary><strong>Хранилище WebinarStorage для ресурса WebinarResource</strong></summary>
 
 ```php
 namespace App\Resources\Webinar\Assets;
