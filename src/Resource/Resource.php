@@ -473,6 +473,7 @@ class Resource
     public function initResource(string $context = ''): Resource
     {
         $this->setContext($context);
+        $this->setAssets(Assets::class);
 
         return $this;
     }
