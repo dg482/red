@@ -9,6 +9,7 @@ use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\SwitchField;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
@@ -252,9 +253,7 @@ class Resource
                     $this->values[$idx] = $field->getValue()->getValue();
                 }
 
-                if ($this->isBoolValueField($field)) {
-                    $this->values[$idx] = !empty($this->values[$idx]);
-                }
+                $this->fixValueType($idx, $field);
             }
             if (empty($this->validatorsClient[$idx])) {
                 $this->validatorsClient[$idx] = $field->getValidatorsClient();
@@ -262,6 +261,20 @@ class Resource
             if (empty($this->validators[$idx])) {
                 $this->validators[$idx] = $field->getValidators();
             }
+        }
+    }
+
+    /**
+     * Исправление типа возвращаемых значений для UI
+     * @param  string  $idx
+     * @param  Field  $field
+     */
+    private function fixValueType(string $idx, Field $field)
+    {
+        if ($this->isBoolValueField($field)) {
+            $this->values[$idx] = !empty($this->values[$idx]);
+        } elseif ($field instanceof SelectField) {
+            $this->values[$idx] = (int) $this->values[$idx];
         }
     }
 
@@ -518,9 +531,9 @@ class Resource
         });
 
         return array_map(function (Field $field) use ($validators, $error_message) {
-
-            $method = 'formField' . $this->getFieldMethodName($field->getField());
             $key = $field->getField();
+            $method = 'formField' . $this->getFieldMethodName($key);
+
 
             if (method_exists($this->formModel, $method)) {
                 /** @var Field $field */
@@ -541,9 +554,11 @@ class Resource
                 }, $validators[$key]);
             }
 
-            $this->validatorsClient[$field->getField()] = $field->getValidatorsClient();
-            $this->values[$field->getField()] = (!$field->isMultiple()) ?
+            $this->validatorsClient[$key] = $field->getValidatorsClient();
+            $this->values[$key] = (!$field->isMultiple()) ?
                 $field->getValue()->getValue() : $field->getValue()->getValues();// set values to global object
+
+            $this->fixValueType($key, $field);
 
             if (method_exists($field, 'setAssets') && $this->getAssets()) {
                 $field->setAssets($this->getAssets());
@@ -653,6 +668,11 @@ class Resource
         }
     }
 
+    /**
+     * @param  array  $request
+     * @return array
+     * @throws EmptyFieldNameException
+     */
     public function getFieldsValue(array $request): array
     {
         $fields = [];
