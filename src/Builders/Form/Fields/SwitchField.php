@@ -39,9 +39,10 @@ class SwitchField extends SelectField
 
     /**
      * @param  string  $value
+     * @param  int  $id
      * @return Field
      */
-    public function setValue(string $value = ''): Field
+    public function setValue(string $value = '', int $id = 0): Field
     {
         if ((bool) $value) {
             $this->value->setId(1);
