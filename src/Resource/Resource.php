@@ -19,6 +19,7 @@ use Dg482\Red\Commands\Crud\Create;
 use Dg482\Red\Commands\Crud\Read;
 use Dg482\Red\Commands\Crud\Update;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
+use Dg482\Red\Interfaces\ResourceAssetsInterface;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\Create as ActionCreate;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
@@ -97,9 +98,9 @@ class Resource
 
     /**
      * Определение хранилища файлов ресурса
-     * @var string $assets
+     * @var ResourceAssetsInterface|null
      */
-    protected string $assets = '';
+    protected ?ResourceAssetsInterface $assets = null;
 
     /**
      * Модель формы
@@ -473,7 +474,7 @@ class Resource
     public function initResource(string $context = ''): Resource
     {
         $this->setContext($context);
-        $this->setAssets(Assets::class);
+        $this->setAssets(new Assets);
 
         return $this;
     }
@@ -543,6 +544,10 @@ class Resource
             $this->validatorsClient[$field->getField()] = $field->getValidatorsClient();
             $this->values[$field->getField()] = (!$field->isMultiple()) ?
                 $field->getValue()->getValue() : $field->getValue()->getValues();// set values to global object
+
+            if (method_exists($field, 'setAssets') && $this->getAssets()) {
+                $field->setAssets($this->getAssets());
+            }
 
             return $field;
         }, $fields);
@@ -741,18 +746,18 @@ class Resource
     }
 
     /**
-     * @return string
+     * @return ResourceAssetsInterface|null
      */
-    public function getAssets(): string
+    public function getAssets(): ?ResourceAssetsInterface
     {
         return $this->assets;
     }
 
     /**
-     * @param  string  $assets
+     * @param  ResourceAssetsInterface|null  $assets
      * @return Resource
      */
-    public function setAssets(string $assets): Resource
+    public function setAssets(?ResourceAssetsInterface $assets): Resource
     {
         $this->assets = $assets;
 

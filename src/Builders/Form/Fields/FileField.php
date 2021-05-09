@@ -4,6 +4,7 @@ namespace Dg482\Red\Builders\Form\Fields;
 
 use Closure;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
+use Dg482\Red\Interfaces\ResourceAssetsInterface;
 use Dg482\Red\Model;
 
 /**
@@ -29,6 +30,9 @@ class FileField extends SelectField
 
     /** @var null|Closure */
     protected ?Closure $store = null;
+
+    /** @var ResourceAssetsInterface|null */
+    protected ?ResourceAssetsInterface $assets = null;
 
     /**
      * Массив параметров поля для отрисовки в UI
@@ -125,6 +129,30 @@ class FileField extends SelectField
      */
     public function storeFile($file)
     {
-        return $this->getStore()($file);
+        $params = $this->getStore()($file);
+        if ($this->getAssets()) {
+            $this->getAssets()->store($params);
+        }
+
+        return $params;
+    }
+
+    /**
+     * @return ResourceAssetsInterface|null
+     */
+    public function getAssets(): ?ResourceAssetsInterface
+    {
+        return $this->assets;
+    }
+
+    /**
+     * @param  ResourceAssetsInterface|null  $assets
+     * @return FileField
+     */
+    public function setAssets(?ResourceAssetsInterface $assets): FileField
+    {
+        $this->assets = $assets;
+
+        return $this;
     }
 }
