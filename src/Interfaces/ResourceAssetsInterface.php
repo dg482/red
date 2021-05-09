@@ -29,5 +29,5 @@ interface ResourceAssetsInterface
     /**
      * @return bool
      */
-    public function delete(): bool;
+    public function remove(): bool;
 }
