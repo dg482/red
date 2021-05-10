@@ -4,6 +4,7 @@ namespace Dg482\Red\Tests\Feature;
 
 use Dg482\Red\Adapters\BaseAdapter;
 use Dg482\Red\Builders\Form\BaseForms;
+use Dg482\Red\Builders\Form\Fields\StringField;
 use Dg482\Red\Commands\Crud\Create;
 use Dg482\Red\Commands\Crud\Update;
 use Dg482\Red\Model;
@@ -18,6 +19,40 @@ use Dg482\Red\Resource\Actions\Delete as ActionDelete;
  */
 class ResourceTest extends TestCase
 {
+    public function testEmptyResource()
+    {
+        $adapter = new BaseAdapter();//$this->createMock(BaseAdapter::class);
+        $adapter->setTableColumns([]);
+
+        $model = $this->createMock(Model::class);
+
+        /** @var  BaseForms::class $baseForm */
+        $baseForm = new BaseForms();
+
+        // 1 configure form
+        $baseForm->setModel($model)
+            ->setFormName('user_edit')
+            ->setTitle('Edit test user');
+
+        // 2.1 create resource, set default adapter
+        $resource = new Resource($adapter);
+        $resource->setTitle('Test Users');
+        $resource->setIcon('users');
+        $resource->setModel($model);// 2.2 set Model
+        $resource->setForm($baseForm);// 2.3 set Form
+
+        $fields = [
+            (new StringField)->setField('test')->setName('Test'),
+        ];
+
+        $resource->setFields($fields);
+
+        $arForm = $resource->getForm();
+
+        $this->assertCount(1, $arForm['items']);
+        $this->assertEquals('test',$arForm['items'][0]['field']);
+    }
+
     /**
      * @throws Exception
      */

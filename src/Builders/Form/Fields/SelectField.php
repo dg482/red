@@ -2,6 +2,7 @@
 
 namespace Dg482\Red\Builders\Form\Fields;
 
+use Closure;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
@@ -120,5 +121,31 @@ class SelectField extends StringField
         }, $this->variants);
 
         return $result;
+    }
+
+    /**
+     * Вывод форматированного значения на печать
+     * @return string
+     * @throws BadVariantKeyException
+     * @throws EmptyFieldNameException
+     */
+    public function getPrintValue(): string
+    {
+        $printFn = $this->getPrintFn();
+
+        $result = [];
+        if ($this->isMultiple()) {
+            $result = array_map(function (FieldValue $value) {
+                return $value->getValue();
+            }, $this->getValue()->getValues());
+        } else {
+            $result[] = $this->getValue()->getValue();
+        }
+
+        if ($printFn instanceof Closure) {
+            return $printFn($this, $result);
+        }
+
+        return implode(', ', $result);
     }
 }

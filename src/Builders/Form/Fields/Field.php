@@ -2,6 +2,7 @@
 
 namespace Dg482\Red\Builders\Form\Fields;
 
+use Closure;
 use Dg482\Red\Builders\Form\AttributeTrait;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
@@ -47,6 +48,8 @@ abstract class Field
 
     /** @var array */
     protected array $data = [];
+
+    protected ?Closure $printFn = null;
 
     /**
      * Массив параметров поля для отрисовки в UI
@@ -321,5 +324,24 @@ abstract class Field
     public function getFieldValidateType(): string
     {
         return static::FIELD_VALIDATE_TYPE;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getPrintFn(): ?Closure
+    {
+        return $this->printFn;
+    }
+
+    /**
+     * @param  Closure|null  $printFn
+     * @return Field
+     */
+    public function setPrintFn(?Closure $printFn): Field
+    {
+        $this->printFn = $printFn;
+
+        return $this;
     }
 }
