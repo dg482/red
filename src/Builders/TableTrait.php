@@ -101,7 +101,7 @@ trait TableTrait
         // формирование основных данных по модели
         array_map(function (Model $item) use (&$items, $columns, $relations) {
             $resultItem = ['id' => $item->id];
-            array_map(function (Field $field) use ($item, &$resultItems) {
+            array_map(function (Field $field) use ($item, &$resultItem) {
                 $id = $field->getField();
                 $relationSeparator = (!$this instanceof RelationResource) ? strpos($id, '@') : false;
                 $printMethod = (method_exists($field, 'getPrintValue'));
@@ -115,9 +115,9 @@ trait TableTrait
                 }
 
                 if ($printMethod) {
-                    $resultItems[$id] = $field->getPrintValue();
+                    $resultItem[$id] = $field->getPrintValue();
                 } else {
-                    $resultItems[$id] = $field->isMultiple() ? $field->getValue()->getValues() :
+                    $resultItem[$id] = $field->isMultiple() ? $field->getValue()->getValues() :
                         $field->getValue()->getValue();
                 }
             }, $columns);
