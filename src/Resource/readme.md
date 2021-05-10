@@ -91,3 +91,13 @@ class Identity extends BaseForms implements FormModelInterface
     }
 
 ```
+
+Для отображения (форматирования) значения поля в таблице (в форме для печати), используется метод `Field::getPrintValue()`. 
+
+В случае необходимости переопределения вывода на печать, для каждого поля может быть определено замыкание принимающее в себя экземпляр поля и массив в исходными значениями.
+
+```php
+        $field->setPrintFn(function (Field $field, array $values) {
+            return implode(', ', array_reverse($values));
+        });
+```

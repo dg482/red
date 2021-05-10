@@ -746,7 +746,6 @@ class Resource
         return $this->relationInstance[$relation] ?? null;
     }
 
-
     /**
      * @return array
      */
