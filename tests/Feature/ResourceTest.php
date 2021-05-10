@@ -50,7 +50,7 @@ class ResourceTest extends TestCase
         $arForm = $resource->getForm();
 
         $this->assertCount(1, $arForm['items']);
-        $this->assertEquals('test',$arForm['items'][0]['field']);
+        $this->assertEquals('test', $arForm['items'][0]['field']);
     }
 
     /**
