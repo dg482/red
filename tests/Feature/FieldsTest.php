@@ -94,6 +94,16 @@ class FieldsTest extends TestCase
         $this->assertInstanceOf(FieldValues::class, $field->getValue());
 
         $this->assertCount(2, $field->getValue()->getValues());
+
+        $print = $field->getPrintValue();
+        $this->assertEquals('Audi, MB', $print);
+
+        $field->setPrintFn(function (Field $field, array $values) {
+            return implode(', ', array_reverse($values));
+        });
+
+        $print = $field->getPrintValue();
+        $this->assertEquals('MB, Audi', $print);
     }
 
     public function testIntegerField()

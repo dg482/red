@@ -6,6 +6,7 @@ use Dg482\Red\Adapters\Adapter;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\FileField;
+use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\ResourceAction;
 use Dg482\Red\Resource\RelationResource;
@@ -99,29 +100,34 @@ trait TableTrait
 
         // формирование основных данных по модели
         array_map(function (Model $item) use (&$items, $columns, $relations) {
-            $resultItems = ['id' => $item->id];
+            $resultItem = ['id' => $item->id];
             array_map(function (Field $field) use ($item, &$resultItems) {
                 $id = $field->getField();
                 $relationSeparator = (!$this instanceof RelationResource) ? strpos($id, '@') : false;
+                $printMethod = (method_exists($field, 'getPrintValue'));
                 if ($relationSeparator !== false) {
-                    $id = substr($id, -$relationSeparator);// clear name Field
-                    if ($item->{$id}) {
-                        $field->setValue($item->{$id} ?? '');
-                        $resultItems[$id] = $field->getValue();
+                    list($relation, $field) = explode('@', $id);
+                    if (!empty($item->{$relation}->{$field})) {
+                        $field->setValue($item->{$relation}->{$field});
                     }
                 } else {
                     $field->setValue($item->{$id} ?? '');
+                }
+
+                if ($printMethod) {
+                    $resultItems[$id] = $field->getPrintValue();
+                } else {
                     $resultItems[$id] = $field->isMultiple() ? $field->getValue()->getValues() :
                         $field->getValue()->getValue();
                 }
             }, $columns);
 
             //формирование данных по отношениям модели
-            array_map(function ($fields, string $relation) use ($item, &$resultItems) {
+            array_map(function ($fields, string $relation) use ($item, &$resultItem) {
                 $relationModel = $item->{$relation};
                 if ($relationModel) {
-                    array_map(function (Field $field) use ($item, $relation, $relationModel, &$resultItems) {
-                        $id = str_replace(['|', $relation], '', $field->getField());
+                    array_map(function (Field $field) use ($item, $relation, $relationModel, &$resultItem) {
+                        $id = str_replace(['@', $relation], '', $field->getField());
                         if ($relationModel instanceof IteratorAggregate) {
 //                            $field->setFieldValue($relationModel);
                         } else {
@@ -132,12 +138,12 @@ trait TableTrait
                             }
 //                            $field->setFieldValue($relationModel->{$id});
                         }
-                        $resultItems[$field->getField()] = $field->getFieldValue();
+                        $resultItem[$field->getField()] = $field->getFieldValue();
                     }, $fields);
                 }
             }, $relations, array_keys($relations));
 
-            array_push($items, $resultItems);
+            array_push($items, $resultItem);
         }, $paginator['items']);
 
         $result = [

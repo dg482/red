@@ -2,11 +2,13 @@
 
 namespace Dg482\Red\Builders\Form\Fields;
 
+use Closure;
 use Dg482\Red\Builders\Form\AttributeTrait;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
 use Dg482\Red\Builders\Form\ValidatorsTrait;
+use Dg482\Red\Exceptions\BadVariantKeyException;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\TranslateTrait;
 
@@ -47,6 +49,8 @@ abstract class Field
 
     /** @var array */
     protected array $data = [];
+
+    protected ?Closure $printFn = null;
 
     /**
      * Массив параметров поля для отрисовки в UI
@@ -321,5 +325,50 @@ abstract class Field
     public function getFieldValidateType(): string
     {
         return static::FIELD_VALIDATE_TYPE;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getPrintFn(): ?Closure
+    {
+        return $this->printFn;
+    }
+
+    /**
+     * @param  Closure|null  $printFn
+     * @return Field
+     */
+    public function setPrintFn(?Closure $printFn): Field
+    {
+        $this->printFn = $printFn;
+
+        return $this;
+    }
+
+    /**
+     * Вывод форматированного значения на печать
+     * @return string
+     * @throws BadVariantKeyException
+     * @throws EmptyFieldNameException
+     */
+    public function getPrintValue(): string
+    {
+        $printFn = $this->getPrintFn();
+
+        $result = [];
+        if ($this->isMultiple()) {
+            $result = array_map(function (FieldValue $value) {
+                return $value->getValue();
+            }, $this->getValue()->getValues());
+        } else {
+            $result[] = $this->getValue()->getValue();
+        }
+
+        if ($printFn instanceof Closure) {
+            return $printFn($this, $result);
+        }
+
+        return implode(', ', $result);
     }
 }

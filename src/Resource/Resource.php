@@ -8,6 +8,7 @@ use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
+use Dg482\Red\Builders\Form\Fields\FileField;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\SwitchField;
@@ -265,15 +266,15 @@ class Resource
     }
 
     /**
-     * Исправление типа возвращаемых значений для UI
+     * Исправление типа возвращаемых значений для форм UI (int, bool, string)
      * @param  string  $idx
      * @param  Field  $field
      */
-    private function fixValueType(string $idx, Field $field)
+    protected function fixValueType(string $idx, Field $field)
     {
         if ($this->isBoolValueField($field)) {
             $this->values[$idx] = !empty($this->values[$idx]);
-        } elseif ($field instanceof SelectField) {
+        } elseif ($field instanceof SelectField && !$field instanceof FileField) {
             $this->values[$idx] = (int) $this->values[$idx];
         }
     }
@@ -744,7 +745,6 @@ class Resource
     {
         return $this->relationInstance[$relation] ?? null;
     }
-
 
     /**
      * @return array
