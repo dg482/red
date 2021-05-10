@@ -661,7 +661,7 @@ class Resource
     private function extractFields(Field $field, array &$fields = []): void
     {
         if ($field instanceof BaseStructure) {
-            array_map(function (Field $field) use ($fields) {
+            array_map(function (Field $field) use (&$fields) {
                 $this->extractFields($field, $fields);
             }, $field->getItems());
         } else {
