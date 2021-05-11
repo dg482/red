@@ -91,4 +91,10 @@ interface AdapterInterfaces
      * @return AdapterInterfaces
      */
     public function setFilter(?Closure $filter): AdapterInterfaces;
+
+    /**
+     * Отношения в контексте модели адаптера
+     * @return array
+     */
+    public function with(): array;
 }
