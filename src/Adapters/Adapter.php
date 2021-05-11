@@ -23,6 +23,9 @@ abstract class Adapter implements AdapterInterfaces
     /** @var array */
     protected array $tableColumns = [];
 
+    /** @var array */
+    protected array $with = [];
+
     /**
      * @return array
      */
@@ -31,7 +34,7 @@ abstract class Adapter implements AdapterInterfaces
         $result = [];
 
         array_map(function (string $type) use (&$result) {
-            $targetClass = 'Dg482\\Red\\Builders\\Form\\Fields\\' . ucfirst($type) . 'Field';
+            $targetClass = 'Dg482\\Red\\Builders\\Form\\Fields\\'.ucfirst($type).'Field';
             if (class_exists($targetClass)) {
                 $result[$type] = $targetClass;
             }
@@ -57,7 +60,7 @@ abstract class Adapter implements AdapterInterfaces
     }
 
     /**
-     * @param CommandInterfaces $cmd
+     * @param  CommandInterfaces  $cmd
      */
     public function setCommand(CommandInterfaces $cmd): void
     {
@@ -89,8 +92,8 @@ abstract class Adapter implements AdapterInterfaces
     }
 
     /**
-     * @param Model $model
-     * @param array $ignoreColumns
+     * @param  Model  $model
+     * @param  array  $ignoreColumns
      * @return array
      */
     public function getTableColumns(Model $model, array $ignoreColumns = []): array
@@ -99,7 +102,7 @@ abstract class Adapter implements AdapterInterfaces
     }
 
     /**
-     * @param array $tableColumns
+     * @param  array  $tableColumns
      * @return Adapter
      */
     public function setTableColumns(array $tableColumns): Adapter
@@ -107,5 +110,21 @@ abstract class Adapter implements AdapterInterfaces
         $this->tableColumns = $tableColumns;
 
         return $this;
+    }
+
+    /**
+     * @param  array  $with
+     */
+    public function setWith(array $with): void
+    {
+        $this->with = $with;
+    }
+
+    /**
+     * @return array
+     */
+    public function with(): array
+    {
+        return $this->with;
     }
 }
