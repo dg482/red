@@ -699,6 +699,7 @@ class Resource
 
         return $request;
     }
+
     /**
      * @param array $request
      * @return Command|null
