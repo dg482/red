@@ -18,6 +18,7 @@ use Dg482\Red\Builders\Form\Structure\Tabs;
 use Dg482\Red\Exceptions\BadVariantKeyException;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Tests\TestCase;
+use Exception;
 
 /**
  * Class FieldsTest
@@ -73,6 +74,7 @@ class FieldsTest extends TestCase
     /**
      * @throws BadVariantKeyException
      * @throws EmptyFieldNameException
+     * @throws Exception
      */
     public function testSelectFieldMultiple()
     {
@@ -89,7 +91,7 @@ class FieldsTest extends TestCase
                 ['id' => 1, 'value' => 'Audi'],
                 ['id' => 2, 'value' => 'BMW'],
                 ['id' => 3, 'value' => 'MB'],
-            ]);
+            ])->setFilterVariant();
 
         $this->assertInstanceOf(FieldValues::class, $field->getValue());
 

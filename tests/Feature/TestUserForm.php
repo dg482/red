@@ -19,12 +19,23 @@ class TestUserForm extends BaseForms
     }
 
     /**
-     * @param Field $field
+     * @param  Field  $field
      * @param $value
      * @return StringValue
      */
     public function saveFieldEmail(Field $field, $value): StringValue
     {
         return new StringValue(0, 'test@extra.com');
+    }
+
+    /**
+     * @param  Field  $field
+     * @return Field
+     */
+    public function formFieldEmail(Field $field): Field
+    {
+        $field->setFilterText();
+
+        return $field;
     }
 }

@@ -7,6 +7,7 @@ use Dg482\Red\Builders\Form\AttributeTrait;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
+use Dg482\Red\Builders\Form\FilterTrait;
 use Dg482\Red\Builders\Form\ValidatorsTrait;
 use Dg482\Red\Exceptions\BadVariantKeyException;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
@@ -18,7 +19,7 @@ use Dg482\Red\TranslateTrait;
  */
 abstract class Field
 {
-    use ValidatorsTrait, AttributeTrait, TranslateTrait;
+    use ValidatorsTrait, AttributeTrait, TranslateTrait, FilterTrait;
 
     /** @var string */
     protected const FIELD_TYPE = '';
@@ -50,6 +51,7 @@ abstract class Field
     /** @var array */
     protected array $data = [];
 
+    /** @var Closure|null */
     protected ?Closure $printFn = null;
 
     /**
