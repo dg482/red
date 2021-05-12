@@ -88,6 +88,8 @@ trait FilterTrait
             $this->setFilter($filters);
         }
 
+        $this->setScopedSlots(['filterIcon' => 'filterIcon']);
+
         return $this;
     }
 }
