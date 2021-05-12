@@ -154,4 +154,12 @@ class SelectField extends StringField
 
         return implode(', ', $result);
     }
+
+    /**
+     * @return array
+     */
+    public function getVariants(): array
+    {
+        return $this->variants;
+    }
 }

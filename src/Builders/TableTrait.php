@@ -6,7 +6,6 @@ use Dg482\Red\Adapters\Adapter;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\FileField;
-use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Actions\ResourceAction;
 use Dg482\Red\Resource\RelationResource;
@@ -44,7 +43,7 @@ trait TableTrait
     /**
      * Таблица
      *
-     * @param bool $hardLoad
+     * @param  bool  $hardLoad
      * @return array
      * @throws Exception
      */
@@ -167,7 +166,7 @@ trait TableTrait
     }
 
     /**
-     * @param array $actions
+     * @param  array  $actions
      * @return array
      */
     protected function getActionList(array $actions): array
@@ -230,6 +229,7 @@ trait TableTrait
             'ellipsis' => true,
             'width' => $id === 'id' ? 80 : 200,
             'title' => (isset($this->labels[$id])) ? $this->labels[$id] : $id,
+            'filters' => $field->getFilter(),
         ];
 
         switch ($field->getFieldType()) {
@@ -240,6 +240,10 @@ trait TableTrait
                 break;
             default:
                 break;
+        }
+
+        if ($field->getScopedSlots()) {
+            $column['scopedSlots'] = $field->getScopedSlots();
         }
 
         return $column;

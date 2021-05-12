@@ -63,7 +63,7 @@ class ResourceTest extends TestCase
             ['id' => 'id', 'type' => 'int', 'table' => 'test'],
             ['id' => 'email', 'type' => 'string', 'table' => 'test'],
             ['id' => 'name', 'type' => 'string', 'table' => 'test'],
-            ['id' => 'name', 'type' => 'password', 'table' => 'test'],
+            ['id' => 'password', 'type' => 'password', 'table' => 'test'],
         ]);
 
         $model = $this->createMock(Model::class);

@@ -175,7 +175,7 @@ class Resource
 
     /**
      * Resource constructor.
-     * @param Adapter $adapter
+     * @param  Adapter  $adapter
      */
     public function __construct(Adapter $adapter)
     {
@@ -206,7 +206,7 @@ class Resource
     }
 
     /**
-     * @param AdapterInterfaces $adapter
+     * @param  AdapterInterfaces  $adapter
      */
     public function setAdapter(AdapterInterfaces $adapter): void
     {
@@ -229,7 +229,7 @@ class Resource
     }
 
     /**
-     * @param Field $field
+     * @param  Field  $field
      * @throws EmptyFieldNameException
      */
     private function itemValue(Field $field)
@@ -280,7 +280,7 @@ class Resource
     }
 
     /**
-     * @param Field $field
+     * @param  Field  $field
      * @return bool
      */
     private function isBoolValueField(Field $field): bool
@@ -297,7 +297,7 @@ class Resource
     }
 
     /**
-     * @param Model $model
+     * @param  Model  $model
      * @return Resource
      */
     public function setModel(Model $model): Resource
@@ -316,7 +316,7 @@ class Resource
     }
 
     /**
-     * @param null $relation
+     * @param  null  $relation
      * @return Resource
      */
     public function setRelation($relation): Resource
@@ -335,7 +335,7 @@ class Resource
     }
 
     /**
-     * @param array $hidden_fields
+     * @param  array  $hidden_fields
      * @return Resource
      */
     public function setHiddenFields(array $hidden_fields): Resource
@@ -354,7 +354,7 @@ class Resource
     }
 
     /**
-     * @param array $labels
+     * @param  array  $labels
      * @return Resource
      */
     public function setLabels(array $labels): Resource
@@ -395,7 +395,7 @@ class Resource
     }
 
     /**
-     * @param array $actions
+     * @param  array  $actions
      * @return Resource
      */
     public function setActions(array $actions): Resource
@@ -414,7 +414,7 @@ class Resource
     }
 
     /**
-     * @param string[] $rowActions
+     * @param  string[]  $rowActions
      * @return Resource
      */
     public function setRowActions(array $rowActions): Resource
@@ -433,7 +433,7 @@ class Resource
     }
 
     /**
-     * @param string $title
+     * @param  string  $title
      * @return Resource
      */
     public function setTitle(string $title): Resource
@@ -452,7 +452,7 @@ class Resource
     }
 
     /**
-     * @param array $relations
+     * @param  array  $relations
      * @return Resource
      */
     public function setRelations(array $relations): Resource
@@ -471,7 +471,7 @@ class Resource
     }
 
     /**
-     * @param string $context
+     * @param  string  $context
      * @return Resource
      */
     public function setContext(string $context): Resource
@@ -482,7 +482,7 @@ class Resource
     }
 
     /**
-     * @param string $context
+     * @param  string  $context
      * @return Resource
      */
     public function initResource(string $context = ''): Resource
@@ -533,8 +533,8 @@ class Resource
 
         return array_map(function (Field $field) use ($validators, $error_message) {
             $key = $field->getField();
-            $method = 'formField' . $this->getFieldMethodName($key);
-
+            $method = 'formField'.$this->getFieldMethodName($key);
+            $this->values[$key] = (!$field->isMultiple()) ? '' : [];
 
             if (method_exists($this->formModel, $method)) {
                 /** @var Field $field */
@@ -556,8 +556,12 @@ class Resource
             }
 
             $this->validatorsClient[$key] = $field->getValidatorsClient();
-            $this->values[$key] = (!$field->isMultiple()) ?
-                $field->getValue()->getValue() : $field->getValue()->getValues();// set values to global object
+            $value = $field->getValue();
+            if ($value) {
+                // set values to global object
+                $this->values[$key] = (!$field->isMultiple()) ? $value->getValue() : $value->getValues();
+            }
+
 
             $this->fixValueType($key, $field);
 
@@ -570,7 +574,7 @@ class Resource
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      * @return string
      */
     private function getFieldMethodName(string $name): string
@@ -579,7 +583,7 @@ class Resource
     }
 
     /**
-     * @param BaseForms $form
+     * @param  BaseForms  $form
      * @return Resource
      */
     public function setForm(BaseForms $form): Resource
@@ -614,7 +618,7 @@ class Resource
     }
 
     /**
-     * @param string $icon
+     * @param  string  $icon
      * @return Resource
      */
     public function setIcon(string $icon): Resource
@@ -655,8 +659,8 @@ class Resource
     }
 
     /**
-     * @param Field $field
-     * @param array $fields
+     * @param  Field  $field
+     * @param  array  $fields
      */
     private function extractFields(Field $field, array &$fields = []): void
     {
@@ -701,7 +705,7 @@ class Resource
     }
 
     /**
-     * @param array $request
+     * @param  array  $request
      * @return Command|null
      */
     public function getActionCommand(array $request): Command
@@ -730,8 +734,8 @@ class Resource
     }
 
     /**
-     * @param string $relation
-     * @param Resource $resource
+     * @param  string  $relation
+     * @param  Resource  $resource
      */
     public function setRelationInstance(string $relation, Resource $resource): void
     {
@@ -739,7 +743,7 @@ class Resource
     }
 
     /**
-     * @param string $relation
+     * @param  string  $relation
      * @return Resource|null
      */
     public function getRelationInstance(string $relation): ?Resource
