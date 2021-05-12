@@ -14,8 +14,7 @@
     "name": "dg482/red",
     "prefer-stable": true,
     "require": {
-        "nesbot/carbon": "^2.16",
-        "php": ">=7.4.12"
+        "nesbot/carbon": "^2.16"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9@dev",
