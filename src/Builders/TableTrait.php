@@ -152,6 +152,7 @@ trait TableTrait
             'actions' => $this->getActionList($this->getActions()),
             'rowActions' => $this->getActionList($this->getRowActions()),
             'pagination' => [
+                'defaultPageSize' => self::PAGE_SIZE,
                 'total' => $paginator['total'],
             ],
         ];
@@ -229,7 +230,7 @@ trait TableTrait
             'ellipsis' => true,
             'width' => $id === 'id' ? 80 : 200,
             'title' => (isset($this->labels[$id])) ? $this->labels[$id] : $id,
-            'filters' => $field->getFilter(),
+
         ];
 
         switch ($field->getFieldType()) {
@@ -246,6 +247,11 @@ trait TableTrait
             $column['scopedSlots'] = $field->getScopedSlots();
         }
 
+        if (!empty($field->getFilter())) {
+            $column['filter'] = $field->getFilter();
+            $column['filterMultiple'] = $field->isMultiple();
+        }
+
         return $column;
     }
 
@@ -257,9 +263,16 @@ trait TableTrait
         // columns table
         $setColumns = [];
 
-        foreach ($this->getFieldsTable() as $id => $field) {
-            array_push($setColumns, $this->buildColumn($id, $field));
-        }
+        $fields = [];
+        array_map(function (Field $field) use (&$fields) {
+            $this->extractFields($field, $fields);
+        }, $this->formModel->resourceFields());
+
+        array_map(function (Field $field) use (&$setColumns) {
+            if ($field->isShowTable()) {
+                array_push($setColumns, $this->buildColumn($field->getField(), $field));
+            }
+        }, $fields);
 
         return $setColumns;
     }
@@ -269,6 +282,11 @@ trait TableTrait
      */
     protected function getFieldsTable(): array
     {
+        $fields = [];
+        array_map(function (Field $field) use (&$fields) {
+            $this->extractFields($field, $fields);
+        }, $this->formModel->resourceFields());
+
         return array_filter($this->fields(), function (Field $field) {
             return $field->isShowTable();
         });
