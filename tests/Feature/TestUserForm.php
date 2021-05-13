@@ -35,6 +35,10 @@ class TestUserForm extends BaseForms
     public function formFieldEmail(Field $field): Field
     {
         $field->setFilterText();
+        $field->setFilterFn(function ($query, $request) {
+            // $query->where('email', $request['email']);
+            return $query;
+        });
 
         return $field;
     }

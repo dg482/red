@@ -2,6 +2,7 @@
 
 namespace Dg482\Red\Builders\Form;
 
+use Closure;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\SelectField;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
@@ -16,9 +17,10 @@ trait FilterTrait
     /** @var array $filter */
     protected array $filter = [];
 
-    /**
-     * @var array $scopedSlots
-     */
+    /** @var Closure|null */
+    protected ?Closure $filterFn = null;
+
+    /** @var array $scopedSlots */
     protected array $scopedSlots = [];
 
     /**
@@ -89,6 +91,25 @@ trait FilterTrait
         }
 
         $this->setScopedSlots(['filterIcon' => 'filterIcon']);
+
+        return $this;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getFilterFn(): ?Closure
+    {
+        return $this->filterFn;
+    }
+
+    /**
+     * @param  Closure|null  $filterFn
+     * @return FilterTrait
+     */
+    public function setFilterFn(?Closure $filterFn): self
+    {
+        $this->filterFn = $filterFn;
 
         return $this;
     }

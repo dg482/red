@@ -87,10 +87,10 @@ interface AdapterInterfaces
     public function getTableField(array $columnMeta): Field;
 
     /**
-     * @param  Closure|null  $filter
+     * @param  array  $filters
      * @return AdapterInterfaces
      */
-    public function setFilter(?Closure $filter): AdapterInterfaces;
+    public function setFilters(array $filters): AdapterInterfaces;
 
     /**
      * Отношения в контексте модели адаптера

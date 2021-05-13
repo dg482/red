@@ -2,7 +2,6 @@
 
 namespace Dg482\Red\Adapters;
 
-use Closure;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\StringField;
@@ -34,7 +33,7 @@ class BaseAdapter extends Adapter
     /**
      * @inheritDoc
      */
-    public function setFilter(?Closure $filter): AdapterInterfaces
+    public function setFilters(array $filters): AdapterInterfaces
     {
         return $this;
     }
