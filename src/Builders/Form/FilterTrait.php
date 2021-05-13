@@ -64,7 +64,7 @@ trait FilterTrait
      */
     public function setFilterText(): Field
     {
-        $this->setScopedSlots(['filterDropdown', 'filterIcon']);
+        $this->setScopedSlots(['filterDropdown' => 'filterDropdown', 'filterIcon' => 'filterIcon']);
 
         return $this;
     }
