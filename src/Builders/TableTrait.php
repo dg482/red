@@ -2,6 +2,7 @@
 
 namespace Dg482\Red\Builders;
 
+use Closure;
 use Dg482\Red\Adapters\Adapter;
 use Dg482\Red\Adapters\Interfaces\AdapterInterfaces;
 use Dg482\Red\Builders\Form\Fields\Field;
@@ -60,6 +61,16 @@ trait TableTrait
         /** @var Adapter $adapter */
         $adapter = $this->getAdapter();
         $adapter->setModel(new $this->model);
+
+        $setFilterFn = array_filter(array_map(function (Field $field) {
+            return ($field->isShowTable() && $field->getFilterFn() instanceof Closure) ? $field->getFilterFn() : null;
+        }, $this->fieldsToArray()), function ($filter) {
+            return $filter !== null;
+        });
+
+        if (!empty($setFilterFn)) {
+            $adapter->setFilters($setFilterFn);
+        }
 
         if ($this instanceof RelationResource) {
             $collection = $this->getCollection();
@@ -263,16 +274,11 @@ trait TableTrait
         // columns table
         $setColumns = [];
 
-        $fields = [];
-        array_map(function (Field $field) use (&$fields) {
-            $this->extractFields($field, $fields);
-        }, $this->formModel->resourceFields());
-
         array_map(function (Field $field) use (&$setColumns) {
             if ($field->isShowTable()) {
                 array_push($setColumns, $this->buildColumn($field->getField(), $field));
             }
-        }, $fields);
+        }, $this->fieldsToArray());
 
         return $setColumns;
     }
@@ -280,13 +286,21 @@ trait TableTrait
     /**
      * @return array
      */
-    protected function getFieldsTable(): array
+    private function fieldsToArray(): array
     {
         $fields = [];
         array_map(function (Field $field) use (&$fields) {
             $this->extractFields($field, $fields);
         }, $this->formModel->resourceFields());
 
+        return $fields;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFieldsTable(): array
+    {
         return array_filter($this->fields(), function (Field $field) {
             return $field->isShowTable();
         });

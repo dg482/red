@@ -208,6 +208,7 @@ class FieldsTest extends TestCase
      * @param $fieldClass
      * @param $name
      * @return mixed
+     * @throws EmptyFieldNameException
      */
     protected function fieldTest($fieldClass, $name)
     {

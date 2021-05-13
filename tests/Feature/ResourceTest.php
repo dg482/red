@@ -69,7 +69,7 @@ class ResourceTest extends TestCase
         $model = $this->createMock(Model::class);
 
         /** @var  BaseForms::class $baseForm */
-        $baseForm = new BaseForms();
+        $baseForm = new TestUserForm();
 
         // 1 configure form
         $baseForm->setModel($model)
