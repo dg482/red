@@ -2,8 +2,10 @@
 
 namespace Dg482\Red\Builders\Form\Fields;
 
+use Closure;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
+use Dg482\Red\Builders\Form\FilterTrait;
 
 /**
  * Class Text
@@ -55,5 +57,17 @@ class StringField extends Field
     public function getValue()
     {
         return parent::getValue();
+    }
+
+    /**
+     * @param  Closure|null  $filterFn
+     * @return FilterTrait
+     */
+    public function setFilterFn(?Closure $filterFn): self
+    {
+        $this->filterFn = $filterFn;
+        $this->setFilterText();
+
+        return $this;
     }
 }
