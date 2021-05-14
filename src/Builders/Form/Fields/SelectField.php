@@ -6,8 +6,10 @@ use Closure;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValue;
 use Dg482\Red\Builders\Form\Fields\Values\FieldValues;
 use Dg482\Red\Builders\Form\Fields\Values\StringValue;
+use Dg482\Red\Builders\Form\FilterTrait;
 use Dg482\Red\Exceptions\BadVariantKeyException;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
+use Exception;
 
 /**
  * Class SelectField
@@ -161,5 +163,18 @@ class SelectField extends StringField
     public function getVariants(): array
     {
         return $this->variants;
+    }
+
+    /**
+     * @param  Closure|null  $filterFn
+     * @return self
+     * @throws Exception
+     */
+    public function setFilterFn(?Closure $filterFn): self
+    {
+        $this->filterFn = $filterFn;
+        $this->setFilterVariant();
+
+        return $this;
     }
 }
