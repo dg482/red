@@ -62,22 +62,11 @@ trait TableTrait
         $adapter = $this->getAdapter();
         $adapter->setModel(new $this->model);
 
-        $setFilterFn = array_filter(array_map(function (Field $field) {
-            return ($field->isShowTable() && $field->getFilterFn() instanceof Closure) ? $field->getFilterFn() : null;
-        }, $this->fieldsToArray()), function ($filter) {
-            return $filter !== null;
-        });
+        $this->setFilters($adapter);
 
-        if (!empty($setFilterFn)) {
-            $adapter->setFilters($setFilterFn);
-        }
-
-        if ($this instanceof RelationResource) {
-            $collection = $this->getCollection();
-        } else {
-            /** @var array */
-            $collection = $adapter->read($this->getPageSize());
-        }
+        /** @var array */
+        $collection = ($this instanceof RelationResource) ? $this->getCollection()
+            : $adapter->read($this->getPageSize());
 
         $paginator = [
             'items' => $adapter->getCommand()->getResult() ?? [],
@@ -312,5 +301,23 @@ trait TableTrait
     private function getPageSize(): int
     {
         return $_REQUEST['limit'] ?? 25;
+    }
+
+    /**
+     * @param  Adapter  $adapter
+     */
+    private function setFilters(Adapter &$adapter): void
+    {
+        $setFilterFn = [];
+        /** @var Field $field */
+        foreach ($this->fieldsToArray() as $field) {
+            $filter = ($field->isShowTable() && $field->getFilterFn() instanceof Closure)
+                ? $field->getFilterFn() : null;
+            if (!empty($filter)) {
+                $setFilterFn[] = $filter;
+            }
+        }
+
+        $adapter->setFilters($setFilterFn);
     }
 }
