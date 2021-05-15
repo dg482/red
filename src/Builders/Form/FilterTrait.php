@@ -108,9 +108,9 @@ trait FilterTrait
 
     /**
      * @param  Closure|null  $filterFn
-     * @return FilterTrait
+     * @return Field
      */
-    public function setFilterFn(?Closure $filterFn): self
+    public function setFilterFn(?Closure $filterFn): Field
     {
         $this->filterFn = $filterFn;
 
@@ -127,9 +127,9 @@ trait FilterTrait
 
     /**
      * @param  bool  $filterMultiple
-     * @return FilterTrait
+     * @return Field
      */
-    public function setFilterMultiple(bool $filterMultiple = true): FilterTrait
+    public function setFilterMultiple(bool $filterMultiple = true): Field
     {
         $this->filterMultiple = $filterMultiple;
 
