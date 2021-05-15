@@ -249,8 +249,8 @@ trait TableTrait
 
         if (!empty($field->getFilter())) {
             $column['filters'] = $field->getFilter();
-            $column['filterMultiple'] = $field->isMultiple() || $field->isFilterMultiple();
         }
+        $column['filterMultiple'] = ($field->isMultiple() || $field->isFilterMultiple());
 
         return $column;
     }
