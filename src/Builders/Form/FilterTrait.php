@@ -17,6 +17,9 @@ trait FilterTrait
     /** @var array $filter */
     protected array $filter = [];
 
+    /** @var bool  */
+    protected bool $filterMultiple = false;
+
     /** @var Closure|null */
     protected ?Closure $filterFn = null;
 
@@ -110,6 +113,25 @@ trait FilterTrait
     public function setFilterFn(?Closure $filterFn): self
     {
         $this->filterFn = $filterFn;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFilterMultiple(): bool
+    {
+        return $this->filterMultiple;
+    }
+
+    /**
+     * @param  bool  $filterMultiple
+     * @return FilterTrait
+     */
+    public function setFilterMultiple(bool $filterMultiple = true): FilterTrait
+    {
+        $this->filterMultiple = $filterMultiple;
 
         return $this;
     }
