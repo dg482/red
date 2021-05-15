@@ -48,6 +48,13 @@ class MenuItem
     /** @var string */
     protected string $redirect = '';
 
+    /** @var bool */
+    protected bool $hidden = false;
+
+    /**
+     * MenuItem constructor.
+     * @param  int  $id
+     */
     public function __construct(int $id = 0)
     {
         $this->id = $id ?: (microtime(true) + rand(5, 5000));
@@ -226,6 +233,7 @@ class MenuItem
             'child' => $this->getChildItems(),
             'badge' => $this->getBadge(),
             'meta' => $this->getMeta(),
+            'hidden' => $this->isHidden(),
         ], function ($value) {
             return !empty($value) || $value === 0;
         });
@@ -341,6 +349,25 @@ class MenuItem
     public function setName(string $name): MenuItem
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param  bool  $hidden
+     * @return MenuItem
+     */
+    public function setHidden(bool $hidden): MenuItem
+    {
+        $this->hidden = $hidden;
 
         return $this;
     }
