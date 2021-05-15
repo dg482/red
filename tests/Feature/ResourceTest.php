@@ -12,6 +12,9 @@ use Dg482\Red\Resource\Resource;
 use Dg482\Red\Tests\TestCase;
 use Exception;
 use Dg482\Red\Resource\Actions\Delete as ActionDelete;
+use Dg482\Red\Resource\Actions\Create as ActionCreate;
+use Dg482\Red\Resource\Actions\Update as ActionUpdate;
+use Dg482\Red\Resource\Actions\Upload as ActionUpload;
 
 /**
  * Class ResourceTest
@@ -89,7 +92,13 @@ class ResourceTest extends TestCase
             'name' => 'Name',
         ]);
 
-        $resource->setActions([ActionDelete::class]);
+        $resource->setActions([
+            ActionCreate::class,
+            ActionUpdate::class,
+            ActionDelete::class,
+            ActionUpload::class,
+            TestTableAction::class,
+        ]);
 
         $resource->setRowActions([ActionDelete::class]);
 
@@ -106,7 +115,7 @@ class ResourceTest extends TestCase
         $this->assertEquals('Test Users', $arResource['title']);
         $this->assertEquals('users', $resource->getIcon());
         $this->assertCount(4, $arResource['columns']);
-        $this->assertCount(1, $arResource['actions']);
+        $this->assertCount(5, $arResource['actions']);
         $this->assertCount(4, $arResource['data']);
 
 
@@ -114,6 +123,26 @@ class ResourceTest extends TestCase
 
         $this->assertEquals('user_edit', $arForm['form']);
         $this->assertEquals('Edit test user', $arForm['title']);
+
+        array_map(function (array $action) {
+            switch ($action['id']) {
+                case 'test':
+                    $this->assertEquals('Test Action', $action['text']);
+                    $this->assertEquals('test-icon', $action['icon']);
+                    $this->assertEquals('/example/action/url', $action['url']);
+                    $this->assertEquals('user_edit', $action['form']);
+
+                    $this->assertEquals('Confirm action?', $action['confirm']['title']);
+                    $this->assertEquals('Confirm message...', $action['confirm']['message']);
+                    $this->assertEquals('confirm-icon', $action['confirm']['icon']);
+                    $this->assertEquals('Confirm test action?', $action['confirm']['okText']);
+                    $this->assertEquals('danger', $action['confirm']['okType']);
+                    $this->assertEquals('Confirm cancel test action?', $action['confirm']['cancelText']);
+                    break;
+                default:
+                    break;
+            }
+        }, $arResource['actions']);
     }
 
     public function testSaveResource()
