@@ -111,7 +111,7 @@ class WebinarResource extends Resource
 ```
 
 <details>
-  <summary><strong>Хранилище WebinarStorage для ресурса WebinarResource</strong></summary>
+  <summary><strong>Хранилище WebinarStorage для ресурса WebinarResource (Laravel)</strong></summary>
 
 ```php
 namespace App\Resources\Webinar\Assets;
@@ -182,7 +182,7 @@ class WebinarStorage extends Storage implements ResourceAssetsInterface
 </details>
 
 <details>
-  <summary><strong>Форма WebinarItemForm для ресурса WebinarResource</strong></summary>
+  <summary><strong>Форма WebinarItemForm для ресурса WebinarResource (Laravel)</strong></summary>
 
 ```php
 namespace App\Resources\Webinar\Forms;
@@ -191,6 +191,10 @@ use App\Models\Webinar;
 use Dg482\Red\Builders\Form\BaseForms;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\DateField;
+use Dg482\Red\Exceptions\EmptyFieldNameException;
+use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 
 /**
  * Определение формы для работы с моделью Webinar, содержит методы модификации полей по умолчанию
@@ -209,7 +213,49 @@ class WebinarItemForm extends BaseForms
         $this->setFormName('webinar/item'); // идентификатор формы
         $this->setModel($model); // определение модели в контексте формы
      }
-
+     
+     
+    /**
+     * Переопределение поля Дата создания
+     * 
+     * При переопределение происходит корректировка отображения поля в форме 
+     * и определение замыкания вызываемого при построение запроса из таблицы ресурса определяющего
+     * условие фильтрации по полю.
+     * 
+     * @param  Field  $field
+     * @return Field
+     * @throws EmptyFieldNameException
+     */
+    public function formFieldCreatedAt(Field $field): Field
+    {
+        return (new DateField)
+            ->setFilterFn(function (Builder &$builder, array $request) use ($field) {// замыкание для условия запроса к БД
+                if (!empty($request['created_at'])) {
+                    if (count($request['created_at']) === 1) {// если передано одно значение
+                        $date = Carbon::createFromFormat('Y-m-d', current($request['created_at']));
+                        // фильтруем в диапазоне начала и конца даты
+                        $builder->whereBetween('created_at', [
+                            $date->startOfDay()->format(Carbon::DEFAULT_TO_STRING_FORMAT),
+                            $date->endOfDay()->format(Carbon::DEFAULT_TO_STRING_FORMAT),
+                        ]);
+                    } elseif (!empty($request['created_at'][0]) && !empty($request['created_at'][1])) {
+                        $start = Carbon::createFromFormat('Y-m-d', $request['created_at'][0]);
+                        $end = Carbon::createFromFormat('Y-m-d', $request['created_at'][1]);
+                        // фильтруем в диапазоне начала и конца дат
+                        $builder->whereBetween('created_at', [
+                            $start->startOfDay()->format(Carbon::DEFAULT_TO_STRING_FORMAT),
+                            $end->endOfDay()->format(Carbon::DEFAULT_TO_STRING_FORMAT),
+                        ]);
+                    }
+                }
+            })
+            ->setFilterMultiple()// возможность выбора диапазона значений
+            ->hideForm() // скрываем отображение в форме
+            ->setField($field->getField()) // определение поля
+            ->setName($field->getName())// определение названия
+            ->setValue($field->getValue()->getValue());
+    }
+    
     /**
      * Переопределение поля url
      *
