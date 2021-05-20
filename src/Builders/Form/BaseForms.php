@@ -6,6 +6,7 @@ use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
+use Dg482\Red\Interfaces\FormModelInterface;
 use Dg482\Red\Model;
 use Dg482\Red\Resource\Resource;
 use Exception;
@@ -46,6 +47,12 @@ class BaseForms implements FormModelInterface
      * @var Model
      */
     protected Model $model;
+
+    /**
+     * Структура формы (внешнее определение порядка следования/вложенности элементов)
+     * @var array
+     */
+    private array $structure = [];
 
     /**
      * @return array
@@ -200,5 +207,22 @@ class BaseForms implements FormModelInterface
             ->setValue($field->getValue()->getValue())
             ->hideTable()
             ->hideForm();
+    }
+
+    /**
+     * @param  array  $structure
+     */
+    public function setFormStructure(array $structure): void
+    {
+        $this->structure = $structure;
+    }
+
+    /**
+     * @param  array  $fields
+     * @return array
+     */
+    public function sortFields(array $fields): array
+    {
+        return $fields;
     }
 }
