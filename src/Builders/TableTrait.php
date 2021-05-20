@@ -228,9 +228,8 @@ trait TableTrait
             'type' => $field->getFieldType(),
             'dataIndex' => $id,
             'ellipsis' => true,
-            'width' => $id === 'id' ? 80 : 200,
-            'title' => (isset($this->labels[$id])) ? $this->labels[$id] : $id,
-
+            'width' => $field->getAttributeWidth() ?? $id === 'id' ? 80 : 200,
+            'title' => $field->getName() ?? $this->labels[$id] ?? $fieldId,
         ];
 
         switch ($field->getFieldType()) {
