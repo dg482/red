@@ -19,4 +19,12 @@ trait AttributeTrait
     {
         return $this->attributes;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getAttributeWidth(): ?int
+    {
+        return $this->attributes['width'] ?? null;
+    }
 }
