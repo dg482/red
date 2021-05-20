@@ -221,6 +221,19 @@ trait TableTrait
     protected function buildColumn($id, Field $field): array
     {
         $fieldId = $field->id ?? $id;
+
+        $title = $field->getName();
+
+        if (!empty($this->labels[$id]) && empty($title)) {
+            $title = $this->labels[$id];
+        }
+
+        $width = $id === 'id' ? 80 : 200;
+
+        if (!empty($field->getAttributeWidth())) {
+            $width = $field->getAttributeWidth();
+        }
+
         $column = [
             'id' => $fieldId,
             'key' => $fieldId,
@@ -228,8 +241,8 @@ trait TableTrait
             'type' => $field->getFieldType(),
             'dataIndex' => $id,
             'ellipsis' => true,
-            'width' => $field->getAttributeWidth() ?? $id === 'id' ? 80 : 200,
-            'title' => $field->getName() ?? $this->labels[$id] ?? $fieldId,
+            'width' => $width,
+            'title' => $title,
         ];
 
         switch ($field->getFieldType()) {
