@@ -12,5 +12,4 @@ interface ResourceAttributeInterface
      * @return bool
      */
     public function hasAttribute(): bool;
-
 }
