@@ -119,6 +119,21 @@ class FormTest extends TestCase
             }
         }
 
+        $resource->getFormModel()->setFormStructure([
+            ['field' => 'id'],
+            ['field' => 'balance'],
+            ['field' => 'total'],
+            ['field' => 'active'],
+            ['field' => 'email'],
+            ['field' => 'name'],
+            ['field' => 'dob'],
+            ['field' => 'password'],
+            ['field' => 'age'],
+            ['field' => 'last_time'],
+            ['field' => 'switch'],
+        ]);
+
+
         $jsonForm = $resource->getForm();
 
         $this->assertTrue($jsonForm['form'] === 'ui');
