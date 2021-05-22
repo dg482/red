@@ -662,7 +662,7 @@ class Resource
      * @param  Field  $field
      * @param  array  $fields
      */
-    private function extractFields(Field $field, array &$fields = []): void
+    public function extractFields(Field $field, array &$fields = []): void
     {
         if ($field instanceof BaseStructure) {
             array_map(function (Field $field) use (&$fields) {
