@@ -194,6 +194,10 @@ class BaseForms implements FormModelInterface
      */
     public function resourceFields(): array
     {
+        if (!empty($this->structure)) {
+            return $this->sortFields($this->fields());
+        }
+
         return $this->fields();
     }
 
@@ -250,7 +254,14 @@ class BaseForms implements FormModelInterface
                 $extract($field, $extractFields);
             }
             $result = [];
-            $buildStructure = function (array $field, &$result = [], BaseStructure &$container = null) use (&$buildStructure, $extractFields) {
+            $buildStructure = function (
+                array $field,
+                &$result = [],
+                BaseStructure &$container = null
+            ) use (
+                &$buildStructure,
+                $extractFields
+            ) {
                 $target = $extractFields[$field['field']] ?? null;
                 if (!$target) {
                     $target = $this->createField($field);
