@@ -5,6 +5,8 @@ namespace Dg482\Red\Builders\Form;
 use Dg482\Red\Builders\Form\Buttons\Button;
 use Dg482\Red\Builders\Form\Fields\Field;
 use Dg482\Red\Builders\Form\Fields\HiddenField;
+use Dg482\Red\Builders\Form\Fields\StringField;
+use Dg482\Red\Builders\Form\Structure\BaseStructure;
 use Dg482\Red\Exceptions\EmptyFieldNameException;
 use Dg482\Red\Interfaces\FormModelInterface;
 use Dg482\Red\Model;
@@ -218,11 +220,64 @@ class BaseForms implements FormModelInterface
     }
 
     /**
+     * @param  array  $newField
+     * @return Field
+     */
+    public function createField(array $newField): Field
+    {
+        $field = new StringField();
+
+        return $field;
+    }
+
+    /**
      * @param  array  $fields
      * @return array
      */
-    public function sortFields(array $fields): array
+    public function sortFields(array $fields = []): array
     {
+        if ($this->structure) {
+            $extract = function ($field, &$result = []) use (&$extract) {
+                $result[$field->getField()] = $field;
+                if ($field instanceof BaseStructure) {
+                    array_map(function (Field $field) use (&$result, &$extract) {
+                        $extract($field, $result);
+                    }, $field->getItems());
+                }
+            };
+            $extractFields = [];
+            foreach ($fields as $field) {
+                $extract($field, $extractFields);
+            }
+            $result = [];
+            $buildStructure = function (array $field, &$result = [], BaseStructure &$container = null) use (&$buildStructure, $extractFields) {
+                $target = $extractFields[$field['field']] ?? null;
+                if (!$target) {
+                    $target = $this->createField($field);
+                }
+
+                if ($target instanceof BaseStructure) {
+                    if (!empty($field['children'])) {
+                        $target->setItems([]);// reset structure items
+                        foreach ($field['children'] as $child) {
+                            $buildStructure($child, $result, $target);
+                        }
+                    }
+                } else {
+                    if ($container instanceof BaseStructure) {
+                        $container->pushItem($target);
+                    }
+                }
+                if (null === $container) {
+                    $result[] = $target;
+                }
+            };
+
+            foreach ($this->structure as $item) {
+                $buildStructure($item, $result);
+            }
+        }
+
         return $fields;
     }
 }
