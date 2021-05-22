@@ -269,6 +269,7 @@ trait TableTrait
 
     /**
      * @return array
+     * @throws \Dg482\Red\Exceptions\EmptyFieldNameException
      */
     protected function getColumns(): array
     {
