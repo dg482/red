@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/dg482/red.svg?token=ZS6AeWEGWqj2e7NdaYiG&branch=main)](https://travis-ci.com/dg482/red)
 [![codecov](https://codecov.io/gh/dg482/red/branch/dev/graph/badge.svg?token=QI34D86EOX)](https://codecov.io/gh/dg482/red)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fdg482%2Fred%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/dg482/red/main)
 
 Данный пакет предназначен для определения Ресурсов, построения Таблиц, Форм и Меню навигации.
 
